@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:forgeview="http://jboss.org/forge/view"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="id" value='#{viewSymbolBean.id}'/>
+		<f:event type="preRenderView" listener='#{viewSymbolBean.retrieve}'/>
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="View View Symbol"/>
+
+	<ui:define name="header">
+		View Symbol
+	</ui:define>
+
+	<ui:define name="subheader">
+		View existing View Symbol
+	</ui:define>
+
+	<ui:define name="footer"/>
+
+	<ui:define name="main">
+		<h:panelGrid columnClasses="label,component,required" columns="3">
+			<h:outputLabel for="viewSymbolBeanViewSymbolMultiviewSymbol" value="Multiview Symbol:"/>
+			<h:link id="viewSymbolBeanViewSymbolMultiviewSymbol" outcome="/multiviewSymbol/view" rendered="#{!empty viewSymbolBean.viewSymbol.multiviewSymbol}" value="#{viewSymbolBean.viewSymbol.multiviewSymbol}">
+				<f:param name="id" value="#{viewSymbolBean.viewSymbol.multiviewSymbol.id}"/>
+			</h:link>
+			<h:outputText/>
+			<h:outputLabel for="viewSymbolBeanViewSymbolName" value="Name:"/>
+			<h:outputText id="viewSymbolBeanViewSymbolName" value="#{viewSymbolBean.viewSymbol.name}"/>
+			<h:outputText/>
+			<h:outputLabel for="viewSymbolBeanViewSymbolViewSymbolHasClarifiers" value="View Symbol Has Clarifiers:"/>
+			<h:dataTable id="viewSymbolBeanViewSymbolViewSymbolHasClarifiers" styleClass="data-table" value="#{forgeview:asList(viewSymbolBean.viewSymbol.viewSymbolHasClarifiers)}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Clarifier"/>
+					</f:facet>
+					<h:link outcome="/viewSymbolHasClarifier/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="forgeviewdisplayitemClarifier" value="#{forgeview:display(_item.clarifier)}"/>
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<h:outputText/>
+			<h:outputLabel for="viewSymbolBeanViewSymbolViewSymbolHasImages" value="View Symbol Has Images:"/>
+			<h:dataTable id="viewSymbolBeanViewSymbolViewSymbolHasImages" styleClass="data-table" value="#{forgeview:asList(viewSymbolBean.viewSymbol.viewSymbolHasImages)}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Image"/>
+					</f:facet>
+					<h:link outcome="/viewSymbolHasImage/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="forgeviewdisplayitemImage" value="#{forgeview:display(_item.image)}"/>
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<h:outputText/>
+		</h:panelGrid>
+
+		<div class="buttons">
+			<h:link value="View All" outcome="search" styleClass="btn btn-primary"/> 
+			<h:link value="Edit" outcome="create" includeViewParams="true" styleClass="btn btn-primary"/>
+			<h:link value="Create New" outcome="create" styleClass="btn btn-primary"/>
+		</div>
+	</ui:define>
+
+</ui:composition>

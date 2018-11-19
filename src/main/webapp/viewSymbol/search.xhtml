@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:forgeview="http://jboss.org/forge/view"
+	template="/resources/scaffold/pageTemplate.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="page" value='#{viewSymbolBean.page}'/>
+		<f:event type="preRenderView" listener='#{viewSymbolBean.paginate}'/>
+	</f:metadata>
+
+	<ui:param name="pageTitle" value="Search View Symbol entities"/>
+
+	<ui:define name="header">
+		View Symbol
+	</ui:define>
+
+	<ui:define name="subheader">
+		Search View Symbol entities
+	</ui:define>
+
+	<ui:define name="footer"/>
+
+	<ui:define name="main">
+		<h:form id="search">
+			<f:validateBean disabled="true">
+				<h:panelGroup styleClass="search">
+
+					<h:panelGrid columnClasses="label,component,required" columns="3">
+						<h:outputLabel for="viewSymbolBeanExampleMultiviewSymbol" value="Multiview Symbol:"/>
+						<h:panelGroup>
+							<h:selectOneMenu converter="#{multiviewSymbolBean.converter}" id="viewSymbolBeanExampleMultiviewSymbol" value="#{viewSymbolBean.example.multiviewSymbol}">
+								<f:selectItem/>
+								<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{multiviewSymbolBean.all}" var="_item"/>
+							</h:selectOneMenu>
+							<h:message for="viewSymbolBeanExampleMultiviewSymbol" styleClass="error"/>
+						</h:panelGroup>
+						<h:outputText/>
+						<h:outputLabel for="viewSymbolBeanExampleName" value="Name:"/>
+						<h:panelGroup>
+							<h:inputText id="viewSymbolBeanExampleName" maxLength="45" value="#{viewSymbolBean.example.name}"/>
+							<h:message for="viewSymbolBeanExampleName" styleClass="error"/>
+						</h:panelGroup>
+						<h:outputText/>
+					</h:panelGrid>
+					<h:panelGroup styleClass="buttons">
+						<h:commandLink value="Search" action='#{viewSymbolBean.search}' styleClass="btn btn-primary"/>
+						<h:commandLink value="Create New" action='#{viewSymbolBean.create}' styleClass="btn btn-primary"/>
+					</h:panelGroup>
+				</h:panelGroup>
+			</f:validateBean>
+			
+			<h:dataTable id="viewSymbolBeanPageItems" styleClass="data-table" value="#{viewSymbolBean.pageItems}" var="_item">
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Name"/>
+					</f:facet>
+					<h:link outcome="/viewSymbol/view">
+						<f:param name="id" value="#{_item.id}"/>
+						<h:outputText id="itemName" value="#{_item.name}"/>
+					</h:link>
+				</h:column>
+			</h:dataTable>
+			<ui:include src="/resources/scaffold/paginator.xhtml">
+				<ui:param name="paginatorBean" value='#{viewSymbolBean}'/>
+			</ui:include>
+		</h:form>
+			
+	</ui:define>
+
+</ui:composition>
