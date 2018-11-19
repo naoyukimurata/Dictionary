@@ -1,0 +1,51 @@
+body {
+    padding-top: 50px;
+}
+
+#container {
+    height: 100%;
+    width: 100%;
+}
+
+#footer {
+    text-align: center;
+}
+
+.centering-container {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.content-ll {
+    max-width: 80%;
+    height: 100%;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    background-color: white;
+}
+
+.content-l {
+    max-width: 800px;
+    height: 100%;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    background-color: white;
+}
+
+.content-m {
+    max-width: 600px;
+    height: 100%;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    background-color: white;
+}
+
+.icon-s {
+    width: 15px;
+    height: 15px;
+}
+

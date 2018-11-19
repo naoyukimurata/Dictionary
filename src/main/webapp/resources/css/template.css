@@ -1,0 +1,26 @@
+/* タブ */
+.navbar-inverse .navbar-nav>li>a {
+    color: white;
+    text-decoration: none;
+}
+.navbar-inverse .navbar-nav>li>a:hover {
+    color: #8c8c8c;
+    text-decoration: none;
+}
+.navbar-inverse .navbar-nav>li>a:active {
+    color: #8c8c8c;
+    text-decoration: none;
+}
+
+.navbar-inverse .navbar-brand {
+    color: white;
+    text-decoration: none;
+}
+.navbar-inverse .navbar-brand:hover {
+    color: #8c8c8c;
+    text-decoration: none;
+}
+.navbar-inverse .navbar-brand:active {
+    color: #8c8c8c;
+    text-decoration: none;
+}
