@@ -28,15 +28,21 @@ public class MeaningRegisterBean extends SubFunction implements Serializable {
     private int clarifierId;
     @Setter @Getter
     private Clarifier clarifier;
-
     @Setter @Getter
     private Meaning meaning = new Meaning();
     @Getter
     private List<Meaning> meaningList = new ArrayList<>();
+    @Getter
+    private String selectedMeanId;
+    @Getter
+    private Meaning selectedMean;
+    public void setSelectedMeanId(String selectedMeanId) {
+        this.selectedMeanId  = selectedMeanId;
+        selectedMean = meaningFacade.findOne(Integer.parseInt(selectedMeanId));
+        selectedMean.setClarifier(clarifier);
+    }
 
     public void init() {
-        System.out.println("init()");
-        System.out.println(clarifierId);
         clarifier = clarifierFacade.findOne(clarifierId);
         meaning.setClarifier(clarifier);
         for(Meaning meaning : clarifier.getMeanings()) {
@@ -51,12 +57,30 @@ public class MeaningRegisterBean extends SubFunction implements Serializable {
             facesContext.getExternalContext().getFlash().put("notice", meaning.getWord()+"登録成功");
         } else facesContext.getExternalContext().getFlash().put("notice", "登録失敗：すでに存在する名前です");
 
+        return "/meaning/create?faces-redirect=true&id="+clarifierId;
+    }
+
+    /* meaning名更新 */
+    public String update() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        String originWord = meaningFacade.findOne(selectedMean.getId()).getWord();
+        if(meaningFacade.update(selectedMean)) {
+            facesContext.getExternalContext().getFlash().put("notice",  originWord + " → "+ selectedMean.getWord() + "更新成功");
+        } else facesContext.getExternalContext().getFlash().put("notice", "更新失敗：すでに存在する名前です");
 
         return "/meaning/create?faces-redirect=true&id="+clarifierId;
     }
 
     /* meaning削除 */
-    public String delete(Meaning meaning) {
-        return "";
+    public String delete() {
+        /*
+          関連するViewSymbolも削除予定
+        */
+        meaningFacade.remove(meaningFacade.findOne(Integer.parseInt(selectedMeanId)));
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.getExternalContext().getFlash().put("notice", selectedMean.getWord()+"削除成功");
+
+        return "/meaning/create?faces-redirect=true&id="+clarifierId;
     }
 }

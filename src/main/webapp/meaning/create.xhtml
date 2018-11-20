@@ -16,6 +16,37 @@
 	</f:metadata>
 
 	<ui:define name="main">
+		<div id="modal-overlay"></div>
+
+		<div id="modal-content-f" class="mc">
+			<div class="modal-form">
+				<h:form>
+					<div class="form-group">
+						<label>名前</label>
+						<h:inputText value="${meaningRegisterBean.selectedMean.word}" id="fMeanName" class="form-control" />
+						<h:message for="fMeanName" class="alert-warning"/>
+					</div>
+					<div>
+						<h:commandButton action="#{meaningRegisterBean.update()}" value="修正" class="btn btn-primary btn-block" />
+					</div>
+				</h:form>
+				<p><a class="button-link modal-close">閉じる</a></p>
+			</div>
+		</div>
+
+		<div id="modal-content-d" class="mc">
+			<div class="modal-form">
+				<h4>このMeaningを注釈しているViewSymbolも消えてしまいますが構いませんか？</h4>
+				<div id="btn-box">
+					<h:form>
+						<h:commandButton action="#{meaningRegisterBean.delete()}" value="はい"
+										 class="btn btn-primary modal-close"/>
+						<h:commandButton value="いいえ" class="btn btn-primary modal-close"/>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
 		<div class="centering-container">
 			<ui:fragment rendered="#{flash.notice.contains('成功')}">
 				<div class="flash-success">
@@ -53,12 +84,11 @@
 														 image="../resources/icon/fix.png"
 														 class="icon">
 											<f:ajax render="fix-modal"/>
+											<f:setPropertyActionListener value="#{_m.id}" target="#{meaningRegisterBean.selectedMeanId}"/>
 										</h:commandButton>
-										<h:commandButton
-
-												image="../resources/icon/trash.png"
-												class="icon">
+										<h:commandButton onclick="showDeleteForm()" image="../resources/icon/trash.png" class="icon">
 											<f:ajax render="@form"/>
+											<f:setPropertyActionListener value="#{_m.id}" target="#{meaningRegisterBean.selectedMeanId}"/>
 										</h:commandButton>
 									</div>
 								</div>

@@ -20,6 +20,13 @@ public class MeaningFacade {
         } else return false;
     }
 
+    public boolean update(Meaning meaning) {
+        if(checkOverlap(meaning)) {
+            em.merge(meaning);
+            return true;
+        } else return false;
+    }
+
     public boolean checkOverlap(Meaning meaning) {
         String jpql = "SELECT m FROM Meaning m WHERE m.word = :mWord";
         TypedQuery<Meaning> query = em.createQuery(jpql, Meaning.class);
