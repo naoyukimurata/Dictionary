@@ -45,6 +45,25 @@ public class SubFunction {
         return true;
     }
 
+    public void updateFileName(String path, String originName, String newName) {
+        ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String filepath = ctx.getRealPath("resources") +  path;
+
+        //変更前ファイル
+        File originFile = new File(filepath +  originName);
+        //変更後ファイル
+        File newFile = new File(filepath + newName);
+
+        System.out.println(originFile);
+        System.out.println(newFile);
+
+        if(originFile.renameTo(newFile)) System.out.println("ファイル名変更成功 : " + newName);
+        else {
+            System.out.println("ファイル名変更失敗");
+            return;
+        }
+    }
+
     public void deleteFile(String path, String fileName) {
         ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String filepath = ctx.getRealPath("resources") + path + fileName;

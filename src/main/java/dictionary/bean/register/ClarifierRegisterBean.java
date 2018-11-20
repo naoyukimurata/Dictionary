@@ -71,10 +71,11 @@ public class ClarifierRegisterBean extends SubFunction implements Serializable {
         String originWord = clarifierFacade.findOne(selectedClari.getId()).getTypeName();
         System.out.println("update");
         System.out.println(originWord);
-      /*  if(clarifierFacade.update(selectedClari)) {
+        if(clarifierFacade.update(selectedClari)) {
             facesContext.getExternalContext().getFlash().put("notice",  originWord + " → "+ selectedClari.getTypeName() + "更新成功");
+            updateFileName("/c_icon/", originWord+".jpg", selectedClari.getTypeName()+".jpg");
         } else facesContext.getExternalContext().getFlash().put("notice", "更新失敗：すでに存在する名前です");
-*/
+
         return "/clarifier/create?faces-redirect=true";
     }
 
