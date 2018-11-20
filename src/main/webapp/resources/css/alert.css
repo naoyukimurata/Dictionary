@@ -1,0 +1,25 @@
+.alert-warning {
+    color: red;
+}
+
+.alert-warn {
+    color: red;
+}
+
+.alert-success {
+    color: #57805c;
+    background-color: #dff0d8;
+}
+
+li {
+    list-style: none;
+}
+
+.flash-success  {
+    color: #57805c;
+    background-color: #dff0d8;
+}
+.flash-error  {
+    color: #80575c;
+    background-color: #f0dfd8;
+}

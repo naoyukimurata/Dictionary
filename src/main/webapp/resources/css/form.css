@@ -1,0 +1,17 @@
+.content-form {
+    max-width: 300px;
+    height: 100%;
+    padding: 20px;
+    margin: auto;
+    text-align: left;
+    background-color: #F2F2F2;
+}
+
+.modal-form {
+    max-width: 300px;
+    height: 100%;
+    padding: 20px;
+    margin: auto;
+    text-align: left;
+}
+
