@@ -1,5 +1,5 @@
 package dictionary.entity;
-// Generated 2018/11/20 3:12:54 by Hibernate Tools 4.3.1
+// Generated 2018/11/20 23:16:32 by Hibernate Tools 4.3.1
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;

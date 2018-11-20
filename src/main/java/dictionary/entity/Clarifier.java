@@ -1,4 +1,5 @@
 package dictionary.entity;
+// Generated 2018/11/20 23:16:32 by Hibernate Tools 4.3.1
 
 import java.util.HashSet;
 import java.util.Set;

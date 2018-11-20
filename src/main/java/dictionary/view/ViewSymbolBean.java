@@ -28,6 +28,7 @@ import dictionary.entity.ViewSymbol;
 import dictionary.entity.MultiviewSymbol;
 import dictionary.entity.ViewSymbolHasClarifier;
 import dictionary.entity.ViewSymbolHasImage;
+import dictionary.entity.ViewSymbolHasMeaning;
 import java.util.Iterator;
 
 /**
@@ -156,6 +157,15 @@ public class ViewSymbolBean implements Serializable {
 				nextInViewSymbolHasImages.setViewSymbol(null);
 				iterViewSymbolHasImages.remove();
 				this.entityManager.merge(nextInViewSymbolHasImages);
+			}
+			Iterator<ViewSymbolHasMeaning> iterViewSymbolHasMeanings = deletableEntity
+					.getViewSymbolHasMeanings().iterator();
+			for (; iterViewSymbolHasMeanings.hasNext();) {
+				ViewSymbolHasMeaning nextInViewSymbolHasMeanings = iterViewSymbolHasMeanings
+						.next();
+				nextInViewSymbolHasMeanings.setViewSymbol(null);
+				iterViewSymbolHasMeanings.remove();
+				this.entityManager.merge(nextInViewSymbolHasMeanings);
 			}
 			this.entityManager.remove(deletableEntity);
 			this.entityManager.flush();

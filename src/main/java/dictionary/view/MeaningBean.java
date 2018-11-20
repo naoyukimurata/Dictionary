@@ -26,6 +26,8 @@ import javax.persistence.criteria.Root;
 
 import dictionary.entity.Meaning;
 import dictionary.entity.Clarifier;
+import dictionary.entity.ViewSymbolHasMeaning;
+import java.util.Iterator;
 
 /**
  * Backing bean for Meaning entities.
@@ -135,6 +137,15 @@ public class MeaningBean implements Serializable {
 			clarifier.getMeanings().remove(deletableEntity);
 			deletableEntity.setClarifier(null);
 			this.entityManager.merge(clarifier);
+			Iterator<ViewSymbolHasMeaning> iterViewSymbolHasMeanings = deletableEntity
+					.getViewSymbolHasMeanings().iterator();
+			for (; iterViewSymbolHasMeanings.hasNext();) {
+				ViewSymbolHasMeaning nextInViewSymbolHasMeanings = iterViewSymbolHasMeanings
+						.next();
+				nextInViewSymbolHasMeanings.setMeaning(null);
+				iterViewSymbolHasMeanings.remove();
+				this.entityManager.merge(nextInViewSymbolHasMeanings);
+			}
 			this.entityManager.remove(deletableEntity);
 			this.entityManager.flush();
 			return "search?faces-redirect=true";

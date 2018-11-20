@@ -24,14 +24,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import dictionary.entity.ViewSymbolHasImage;
-import dictionary.entity.Image;
+import dictionary.entity.ViewSymbolHasMeaning;
+import dictionary.entity.Meaning;
 import dictionary.entity.ViewSymbol;
 
 /**
- * Backing bean for ViewSymbolHasImage entities.
+ * Backing bean for ViewSymbolHasMeaning entities.
  * <p/>
- * This class provides CRUD functionality for all ViewSymbolHasImage entities. It focuses
+ * This class provides CRUD functionality for all ViewSymbolHasMeaning entities. It focuses
  * purely on Java EE 6 standards (e.g. <tt>&#64;ConversationScoped</tt> for
  * state management, <tt>PersistenceContext</tt> for persistence,
  * <tt>CriteriaBuilder</tt> for searches) rather than introducing a CRUD framework or
@@ -41,12 +41,12 @@ import dictionary.entity.ViewSymbol;
 @Named
 @Stateful
 @ConversationScoped
-public class ViewSymbolHasImageBean implements Serializable {
+public class ViewSymbolHasMeaningBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/*
-	 * Support creating and retrieving ViewSymbolHasImage entities
+	 * Support creating and retrieving ViewSymbolHasMeaning entities
 	 */
 
 	private Long id;
@@ -59,14 +59,15 @@ public class ViewSymbolHasImageBean implements Serializable {
 		this.id = id;
 	}
 
-	private ViewSymbolHasImage viewSymbolHasImage;
+	private ViewSymbolHasMeaning viewSymbolHasMeaning;
 
-	public ViewSymbolHasImage getViewSymbolHasImage() {
-		return this.viewSymbolHasImage;
+	public ViewSymbolHasMeaning getViewSymbolHasMeaning() {
+		return this.viewSymbolHasMeaning;
 	}
 
-	public void setViewSymbolHasImage(ViewSymbolHasImage viewSymbolHasImage) {
-		this.viewSymbolHasImage = viewSymbolHasImage;
+	public void setViewSymbolHasMeaning(
+			ViewSymbolHasMeaning viewSymbolHasMeaning) {
+		this.viewSymbolHasMeaning = viewSymbolHasMeaning;
 	}
 
 	@Inject
@@ -94,19 +95,19 @@ public class ViewSymbolHasImageBean implements Serializable {
 		}
 
 		if (this.id == null) {
-			this.viewSymbolHasImage = this.example;
+			this.viewSymbolHasMeaning = this.example;
 		} else {
-			this.viewSymbolHasImage = findById(getId());
+			this.viewSymbolHasMeaning = findById(getId());
 		}
 	}
 
-	public ViewSymbolHasImage findById(Long id) {
+	public ViewSymbolHasMeaning findById(Long id) {
 
-		return this.entityManager.find(ViewSymbolHasImage.class, id);
+		return this.entityManager.find(ViewSymbolHasMeaning.class, id);
 	}
 
 	/*
-	 * Support updating and deleting ViewSymbolHasImage entities
+	 * Support updating and deleting ViewSymbolHasMeaning entities
 	 */
 
 	public String update() {
@@ -114,12 +115,12 @@ public class ViewSymbolHasImageBean implements Serializable {
 
 		try {
 			if (this.id == null) {
-				this.entityManager.persist(this.viewSymbolHasImage);
+				this.entityManager.persist(this.viewSymbolHasMeaning);
 				return "search?faces-redirect=true";
 			} else {
-				this.entityManager.merge(this.viewSymbolHasImage);
+				this.entityManager.merge(this.viewSymbolHasMeaning);
 				return "view?faces-redirect=true&id="
-						+ this.viewSymbolHasImage.getId();
+						+ this.viewSymbolHasMeaning.getId();
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -132,13 +133,13 @@ public class ViewSymbolHasImageBean implements Serializable {
 		this.conversation.end();
 
 		try {
-			ViewSymbolHasImage deletableEntity = findById(getId());
-			Image image = deletableEntity.getImage();
-			image.getViewSymbolHasImages().remove(deletableEntity);
-			deletableEntity.setImage(null);
-			this.entityManager.merge(image);
+			ViewSymbolHasMeaning deletableEntity = findById(getId());
+			Meaning meaning = deletableEntity.getMeaning();
+			meaning.getViewSymbolHasMeanings().remove(deletableEntity);
+			deletableEntity.setMeaning(null);
+			this.entityManager.merge(meaning);
 			ViewSymbol viewSymbol = deletableEntity.getViewSymbol();
-			viewSymbol.getViewSymbolHasImages().remove(deletableEntity);
+			viewSymbol.getViewSymbolHasMeanings().remove(deletableEntity);
 			deletableEntity.setViewSymbol(null);
 			this.entityManager.merge(viewSymbol);
 			this.entityManager.remove(deletableEntity);
@@ -152,14 +153,14 @@ public class ViewSymbolHasImageBean implements Serializable {
 	}
 
 	/*
-	 * Support searching ViewSymbolHasImage entities with pagination
+	 * Support searching ViewSymbolHasMeaning entities with pagination
 	 */
 
 	private int page;
 	private long count;
-	private List<ViewSymbolHasImage> pageItems;
+	private List<ViewSymbolHasMeaning> pageItems;
 
-	private ViewSymbolHasImage example = new ViewSymbolHasImage();
+	private ViewSymbolHasMeaning example = new ViewSymbolHasMeaning();
 
 	public int getPage() {
 		return this.page;
@@ -173,11 +174,11 @@ public class ViewSymbolHasImageBean implements Serializable {
 		return 10;
 	}
 
-	public ViewSymbolHasImage getExample() {
+	public ViewSymbolHasMeaning getExample() {
 		return this.example;
 	}
 
-	public void setExample(ViewSymbolHasImage example) {
+	public void setExample(ViewSymbolHasMeaning example) {
 		this.example = example;
 	}
 
@@ -193,8 +194,8 @@ public class ViewSymbolHasImageBean implements Serializable {
 		// Populate this.count
 
 		CriteriaQuery<Long> countCriteria = builder.createQuery(Long.class);
-		Root<ViewSymbolHasImage> root = countCriteria
-				.from(ViewSymbolHasImage.class);
+		Root<ViewSymbolHasMeaning> root = countCriteria
+				.from(ViewSymbolHasMeaning.class);
 		countCriteria = countCriteria.select(builder.count(root)).where(
 				getSearchPredicates(root));
 		this.count = this.entityManager.createQuery(countCriteria)
@@ -202,10 +203,10 @@ public class ViewSymbolHasImageBean implements Serializable {
 
 		// Populate this.pageItems
 
-		CriteriaQuery<ViewSymbolHasImage> criteria = builder
-				.createQuery(ViewSymbolHasImage.class);
-		root = criteria.from(ViewSymbolHasImage.class);
-		TypedQuery<ViewSymbolHasImage> query = this.entityManager
+		CriteriaQuery<ViewSymbolHasMeaning> criteria = builder
+				.createQuery(ViewSymbolHasMeaning.class);
+		root = criteria.from(ViewSymbolHasMeaning.class);
+		TypedQuery<ViewSymbolHasMeaning> query = this.entityManager
 				.createQuery(criteria.select(root).where(
 						getSearchPredicates(root)));
 		query.setFirstResult(this.page * getPageSize()).setMaxResults(
@@ -213,14 +214,14 @@ public class ViewSymbolHasImageBean implements Serializable {
 		this.pageItems = query.getResultList();
 	}
 
-	private Predicate[] getSearchPredicates(Root<ViewSymbolHasImage> root) {
+	private Predicate[] getSearchPredicates(Root<ViewSymbolHasMeaning> root) {
 
 		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
 		List<Predicate> predicatesList = new ArrayList<Predicate>();
 
-		Image image = this.example.getImage();
-		if (image != null) {
-			predicatesList.add(builder.equal(root.get("image"), image));
+		Meaning meaning = this.example.getMeaning();
+		if (meaning != null) {
+			predicatesList.add(builder.equal(root.get("meaning"), meaning));
 		}
 		ViewSymbol viewSymbol = this.example.getViewSymbol();
 		if (viewSymbol != null) {
@@ -231,7 +232,7 @@ public class ViewSymbolHasImageBean implements Serializable {
 		return predicatesList.toArray(new Predicate[predicatesList.size()]);
 	}
 
-	public List<ViewSymbolHasImage> getPageItems() {
+	public List<ViewSymbolHasMeaning> getPageItems() {
 		return this.pageItems;
 	}
 
@@ -240,16 +241,16 @@ public class ViewSymbolHasImageBean implements Serializable {
 	}
 
 	/*
-	 * Support listing and POSTing back ViewSymbolHasImage entities (e.g. from inside an
+	 * Support listing and POSTing back ViewSymbolHasMeaning entities (e.g. from inside an
 	 * HtmlSelectOneMenu)
 	 */
 
-	public List<ViewSymbolHasImage> getAll() {
+	public List<ViewSymbolHasMeaning> getAll() {
 
-		CriteriaQuery<ViewSymbolHasImage> criteria = this.entityManager
-				.getCriteriaBuilder().createQuery(ViewSymbolHasImage.class);
+		CriteriaQuery<ViewSymbolHasMeaning> criteria = this.entityManager
+				.getCriteriaBuilder().createQuery(ViewSymbolHasMeaning.class);
 		return this.entityManager.createQuery(
-				criteria.select(criteria.from(ViewSymbolHasImage.class)))
+				criteria.select(criteria.from(ViewSymbolHasMeaning.class)))
 				.getResultList();
 	}
 
@@ -258,8 +259,8 @@ public class ViewSymbolHasImageBean implements Serializable {
 
 	public Converter getConverter() {
 
-		final ViewSymbolHasImageBean ejbProxy = this.sessionContext
-				.getBusinessObject(ViewSymbolHasImageBean.class);
+		final ViewSymbolHasMeaningBean ejbProxy = this.sessionContext
+				.getBusinessObject(ViewSymbolHasMeaningBean.class);
 
 		return new Converter() {
 
@@ -278,7 +279,7 @@ public class ViewSymbolHasImageBean implements Serializable {
 					return "";
 				}
 
-				return String.valueOf(((ViewSymbolHasImage) value).getId());
+				return String.valueOf(((ViewSymbolHasMeaning) value).getId());
 			}
 		};
 	}
@@ -287,15 +288,15 @@ public class ViewSymbolHasImageBean implements Serializable {
 	 * Support adding children to bidirectional, one-to-many tables
 	 */
 
-	private ViewSymbolHasImage add = new ViewSymbolHasImage();
+	private ViewSymbolHasMeaning add = new ViewSymbolHasMeaning();
 
-	public ViewSymbolHasImage getAdd() {
+	public ViewSymbolHasMeaning getAdd() {
 		return this.add;
 	}
 
-	public ViewSymbolHasImage getAdded() {
-		ViewSymbolHasImage added = this.add;
-		this.add = new ViewSymbolHasImage();
+	public ViewSymbolHasMeaning getAdded() {
+		ViewSymbolHasMeaning added = this.add;
+		this.add = new ViewSymbolHasMeaning();
 		return added;
 	}
 }

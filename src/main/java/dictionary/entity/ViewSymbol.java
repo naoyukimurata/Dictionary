@@ -1,5 +1,5 @@
 package dictionary.entity;
-// Generated 2018/11/20 3:12:54 by Hibernate Tools 4.3.1
+// Generated 2018/11/20 23:16:32 by Hibernate Tools 4.3.1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +28,8 @@ public class ViewSymbol implements java.io.Serializable {
 			0);
 	private Set<ViewSymbolHasImage> viewSymbolHasImages = new HashSet<ViewSymbolHasImage>(
 			0);
+	private Set<ViewSymbolHasMeaning> viewSymbolHasMeanings = new HashSet<ViewSymbolHasMeaning>(
+			0);
 
 	public ViewSymbol() {
 	}
@@ -38,11 +40,13 @@ public class ViewSymbol implements java.io.Serializable {
 	}
 	public ViewSymbol(MultiviewSymbol multiviewSymbol, String name,
 			Set<ViewSymbolHasClarifier> viewSymbolHasClarifiers,
-			Set<ViewSymbolHasImage> viewSymbolHasImages) {
+			Set<ViewSymbolHasImage> viewSymbolHasImages,
+			Set<ViewSymbolHasMeaning> viewSymbolHasMeanings) {
 		this.multiviewSymbol = multiviewSymbol;
 		this.name = name;
 		this.viewSymbolHasClarifiers = viewSymbolHasClarifiers;
 		this.viewSymbolHasImages = viewSymbolHasImages;
+		this.viewSymbolHasMeanings = viewSymbolHasMeanings;
 	}
 
 	@Id
@@ -93,6 +97,16 @@ public class ViewSymbol implements java.io.Serializable {
 	public void setViewSymbolHasImages(
 			Set<ViewSymbolHasImage> viewSymbolHasImages) {
 		this.viewSymbolHasImages = viewSymbolHasImages;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "viewSymbol")
+	public Set<ViewSymbolHasMeaning> getViewSymbolHasMeanings() {
+		return this.viewSymbolHasMeanings;
+	}
+
+	public void setViewSymbolHasMeanings(
+			Set<ViewSymbolHasMeaning> viewSymbolHasMeanings) {
+		this.viewSymbolHasMeanings = viewSymbolHasMeanings;
 	}
 
 }
