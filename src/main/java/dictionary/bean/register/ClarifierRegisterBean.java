@@ -2,7 +2,9 @@ package dictionary.bean.register;
 
 import dictionary.SubFunction;
 import dictionary.entity.Clarifier;
+import dictionary.entity.Meaning;
 import dictionary.facade.ClarifierFacade;
+import dictionary.facade.MeaningFacade;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +22,8 @@ import java.util.List;
 public class ClarifierRegisterBean extends SubFunction implements Serializable {
     @Inject
     ClarifierFacade clarifierFacade;
+    @Inject
+    MeaningFacade meaningFacade;
 
     @Setter @Getter
     private Clarifier clarifier = new Clarifier();
@@ -27,6 +31,15 @@ public class ClarifierRegisterBean extends SubFunction implements Serializable {
     private Part file;
     @Setter @Getter
     private List<Clarifier> clarifierList = new ArrayList<>();
+
+    @Getter
+    private String selectedClariId;
+    @Getter
+    private Clarifier selectedClari;
+    public void setSelectedClariId(String selectedClariId) {
+        this.selectedClariId  = selectedClariId;
+        selectedClari = clarifierFacade.findOne(Integer.parseInt(selectedClariId));
+    }
 
     public void init() {
         clarifierList = clarifierFacade.findAll();
@@ -48,6 +61,39 @@ public class ClarifierRegisterBean extends SubFunction implements Serializable {
             deleteFile("/c_icon/", clarifier.getTypeName()+".jpg");
             facesContext.getExternalContext().getFlash().put("notice", "登録失敗：すでに存在する名前です");
         }
+
+        return "/clarifier/create?faces-redirect=true";
+    }
+
+    /* clarifier名更新 */
+    public String update() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        String originWord = clarifierFacade.findOne(selectedClari.getId()).getTypeName();
+        System.out.println("update");
+        System.out.println(originWord);
+      /*  if(clarifierFacade.update(selectedClari)) {
+            facesContext.getExternalContext().getFlash().put("notice",  originWord + " → "+ selectedClari.getTypeName() + "更新成功");
+        } else facesContext.getExternalContext().getFlash().put("notice", "更新失敗：すでに存在する名前です");
+*/
+        return "/clarifier/create?faces-redirect=true";
+    }
+
+    /* clarifier削除 */
+    public String delete() {
+        /*
+          関連するViewSymbolも削除予定
+        */
+        Clarifier clarifier = clarifierFacade.findOne(Integer.parseInt(selectedClariId));
+        if(clarifier.getMeanings() != null) {
+            for(Meaning meaning : clarifier.getMeanings()) {
+                meaningFacade.remove(meaning);
+            }
+        }
+        clarifier.setMeanings(null);
+        clarifierFacade.remove(clarifier);
+
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        facesContext.getExternalContext().getFlash().put("notice", selectedClari.getTypeName()+"削除成功");
 
         return "/clarifier/create?faces-redirect=true";
     }

@@ -80,9 +80,7 @@
 								<div class="cell">
 									<h3>#{_m.word}</h3>
 									<div class="cell-footer">
-										<h:commandButton onclick="showUpdateForm()"
-														 image="../resources/icon/fix.png"
-														 class="icon">
+										<h:commandButton onclick="showUpdateForm()" image="../resources/icon/fix.png" class="icon">
 											<f:ajax render="fix-modal"/>
 											<f:setPropertyActionListener value="#{_m.id}" target="#{meaningRegisterBean.selectedMeanId}"/>
 										</h:commandButton>

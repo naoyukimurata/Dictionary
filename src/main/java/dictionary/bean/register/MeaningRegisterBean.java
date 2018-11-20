@@ -32,6 +32,7 @@ public class MeaningRegisterBean extends SubFunction implements Serializable {
     private Meaning meaning = new Meaning();
     @Getter
     private List<Meaning> meaningList = new ArrayList<>();
+
     @Getter
     private String selectedMeanId;
     @Getter

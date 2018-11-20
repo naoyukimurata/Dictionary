@@ -20,6 +20,13 @@ public class ClarifierFacade {
         } else return false;
     }
 
+    public boolean update(Clarifier clarifier) {
+        if(checkOverlap(clarifier)) {
+            em.merge(clarifier);
+            return true;
+        } else return false;
+    }
+
     public boolean checkOverlap(Clarifier clarifier) {
         String jpql = "SELECT c FROM Clarifier c WHERE c.typeName = :cTypeName";
         TypedQuery<Clarifier> query = em.createQuery(jpql, Clarifier.class);
@@ -31,7 +38,11 @@ public class ClarifierFacade {
             return true;
         }
     }
-    
+
+    public void remove(Clarifier clarifier) {
+        em.remove(em.merge(clarifier));
+    }
+
     public Clarifier findOne(int cId) {
         String jpql = "SELECT c FROM Clarifier c WHERE c.id = :cId";
         TypedQuery<Clarifier> query = em.createQuery(jpql, Clarifier.class);

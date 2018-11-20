@@ -15,7 +15,48 @@
 	</f:metadata>
 
 	<ui:define name="main">
+		<div id="modal-overlay"></div>
+
+		<div id="modal-content-f" class="mc">
+			<div class="modal-form">
+				<h:form>
+					<div class="form-group">
+						<label>名前</label>
+						<h:inputText value="${clarifierRegisterBean.selectedClari.typeName}" id="fClariName" class="form-control" />
+						<h:message for="fClariName" class="alert-warning"/>
+					</div>
+					<div>
+						<h:commandButton action="#{clarifierRegisterBean.update()}" value="修正" class="btn btn-primary btn-block" />
+					</div>
+				</h:form>
+				<p><a class="button-link modal-close">閉じる</a></p>
+			</div>
+		</div>
+
+		<div id="modal-content-d" class="mc">
+			<div class="modal-form">
+				<h4>このClarifierのMeaningと注釈しているMeaningも消えてしまいますが構いませんか？</h4>
+				<div id="btn-box">
+					<h:form>
+						<h:commandButton action="#{clarifierRegisterBean.delete()}" value="はい"
+										 class="btn btn-primary modal-close"/>
+						<h:commandButton value="いいえ" class="btn btn-primary modal-close"/>
+					</h:form>
+				</div>
+			</div>
+		</div>
+
 		<div class="centering-container">
+			<ui:fragment rendered="#{flash.notice.contains('成功')}">
+				<div class="flash-success">
+					#{flash.notice}
+				</div>
+			</ui:fragment>
+			<ui:fragment rendered="#{flash.notice.contains('失敗')}">
+				<div class="flash-error">
+					#{flash.notice}
+				</div>
+			</ui:fragment>
 			<h3>Clarifier</h3>
 			<h:form id="form" enctype="multipart/form-data">
 				<div class="content-form">
@@ -49,16 +90,13 @@
 														 class="icon">
 											<f:ajax render="@form"/>
 										</h:commandButton>
-										<h:commandButton onclick="showUpdateForm()"
-														 image="../resources/icon/fix.png"
-														 class="icon">
+										<h:commandButton onclick="showUpdateForm()" image="../resources/icon/fix.png" class="icon">
 											<f:ajax render="fix-modal"/>
+											<f:setPropertyActionListener value="#{_c.id}" target="#{clarifierRegisterBean.selectedClariId}"/>
 										</h:commandButton>
-										<h:commandButton
-
-														 image="../resources/icon/trash.png"
-														 class="icon">
+										<h:commandButton onclick="showDeleteForm()" image="../resources/icon/trash.png" class="icon">
 											<f:ajax render="@form"/>
+											<f:setPropertyActionListener value="#{_c.id}" target="#{clarifierRegisterBean.selectedClariId}"/>
 										</h:commandButton>
 									</div>
 								</div>
