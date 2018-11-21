@@ -23,8 +23,6 @@ public class Clarifier implements java.io.Serializable {
 	@Pattern(regexp = "^[a-zA-Z]*$", message = "半角英字以外の入力はできません")
 	private String typeName;
 	private Set<Meaning> meanings = new HashSet<Meaning>(0);
-	private Set<ViewSymbolHasClarifier> viewSymbolHasClarifiers = new HashSet<ViewSymbolHasClarifier>(
-			0);
 
 	public Clarifier() {
 	}
@@ -32,11 +30,9 @@ public class Clarifier implements java.io.Serializable {
 	public Clarifier(String typeName) {
 		this.typeName = typeName;
 	}
-	public Clarifier(String typeName, Set<Meaning> meanings,
-			Set<ViewSymbolHasClarifier> viewSymbolHasClarifiers) {
+	public Clarifier(String typeName, Set<Meaning> meanings) {
 		this.typeName = typeName;
 		this.meanings = meanings;
-		this.viewSymbolHasClarifiers = viewSymbolHasClarifiers;
 	}
 
 	@Id
@@ -67,15 +63,4 @@ public class Clarifier implements java.io.Serializable {
 	public void setMeanings(Set<Meaning> meanings) {
 		this.meanings = meanings;
 	}
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "clarifier")
-	public Set<ViewSymbolHasClarifier> getViewSymbolHasClarifiers() {
-		return this.viewSymbolHasClarifiers;
-	}
-
-	public void setViewSymbolHasClarifiers(
-			Set<ViewSymbolHasClarifier> viewSymbolHasClarifiers) {
-		this.viewSymbolHasClarifiers = viewSymbolHasClarifiers;
-	}
-
 }

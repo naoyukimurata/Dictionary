@@ -2,6 +2,7 @@ package dictionary.bean.search;
 
 import dictionary.SubFunction;
 import dictionary.entity.MultiviewSymbol;
+import dictionary.entity.ViewSymbol;
 import dictionary.facade.MultiviewSymbolFacade;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,16 @@ public class MultiviewSymbolSearchBean extends SubFunction implements Serializab
         multiviewSymbolList = multiviewSymbolFacade.findAll();
     }
 
+    public Object[] getPictures(MultiviewSymbol multiviewSymbol) {
+        System.out.println(multiviewSymbol.getViewSymbols().size());
+        List<ViewSymbol> viewSymbolList = new ArrayList<>();
+        if(multiviewSymbol.getViewSymbols() != null) {
+            for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols()) {
+                System.out.println(viewSymbol.getName());
+
+                viewSymbolList.add(viewSymbol);
+            }
+        }
+        return viewSymbolList.toArray();
+    }
 }

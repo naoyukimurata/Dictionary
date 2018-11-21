@@ -41,12 +41,30 @@
                         <div class="message">
                             <h:messages />
                         </div>
-                        
                         <ui:repeat value="#{multiviewSymbolSearchBean.multiviewSymbolList}" var="_ms">
                             <div class="content content-back">
                                 <h3 id="#{_ms.caption}">■ #{_ms.caption}</h3>
                                 <div class="row">
                                     <div class="col-sm-12 re">
+                                        <ul jsf:id="pic-list">
+                                            <ui:repeat value="#{multiviewSymbolSearchBean.getPictures(_ms)}" var="_pic">
+                                                <li>
+                                                    <div class="pic-cell">
+                                                        <div class="images">
+                                                            <h:graphicImage url="../resources/vs/#{_ms.caption}/m/#{_ms.caption}-#{_pic.image.id}_m.jpg"/>
+                                                        </div>
+                                                        <div class="footer">
+                                                            <h:commandButton
+                                                                    onclick="message()"
+                                                                    image="../resources/icon/trash.png"
+                                                                    class="icon">
+                                                                <f:ajax render="@form"/>
+                                                            </h:commandButton>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
                                         <h:link outcome="/viewSymbol/create.xhtml?id=#{_ms.id}">
                                             <h:graphicImage url="../resources/icon/add.png" class="add-btn"/>
                                         </h:link>

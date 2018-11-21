@@ -25,9 +25,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import dictionary.entity.ViewSymbol;
+import dictionary.entity.Image;
 import dictionary.entity.MultiviewSymbol;
-import dictionary.entity.ViewSymbolHasClarifier;
-import dictionary.entity.ViewSymbolHasImage;
 import dictionary.entity.ViewSymbolHasMeaning;
 import java.util.Iterator;
 
@@ -135,29 +134,15 @@ public class ViewSymbolBean implements Serializable {
 
 		try {
 			ViewSymbol deletableEntity = findById(getId());
+			Image image = deletableEntity.getImage();
+			image.getViewSymbols().remove(deletableEntity);
+			deletableEntity.setImage(null);
+			this.entityManager.merge(image);
 			MultiviewSymbol multiviewSymbol = deletableEntity
 					.getMultiviewSymbol();
 			multiviewSymbol.getViewSymbols().remove(deletableEntity);
 			deletableEntity.setMultiviewSymbol(null);
 			this.entityManager.merge(multiviewSymbol);
-			Iterator<ViewSymbolHasClarifier> iterViewSymbolHasClarifiers = deletableEntity
-					.getViewSymbolHasClarifiers().iterator();
-			for (; iterViewSymbolHasClarifiers.hasNext();) {
-				ViewSymbolHasClarifier nextInViewSymbolHasClarifiers = iterViewSymbolHasClarifiers
-						.next();
-				nextInViewSymbolHasClarifiers.setViewSymbol(null);
-				iterViewSymbolHasClarifiers.remove();
-				this.entityManager.merge(nextInViewSymbolHasClarifiers);
-			}
-			Iterator<ViewSymbolHasImage> iterViewSymbolHasImages = deletableEntity
-					.getViewSymbolHasImages().iterator();
-			for (; iterViewSymbolHasImages.hasNext();) {
-				ViewSymbolHasImage nextInViewSymbolHasImages = iterViewSymbolHasImages
-						.next();
-				nextInViewSymbolHasImages.setViewSymbol(null);
-				iterViewSymbolHasImages.remove();
-				this.entityManager.merge(nextInViewSymbolHasImages);
-			}
 			Iterator<ViewSymbolHasMeaning> iterViewSymbolHasMeanings = deletableEntity
 					.getViewSymbolHasMeanings().iterator();
 			for (; iterViewSymbolHasMeanings.hasNext();) {
@@ -242,6 +227,10 @@ public class ViewSymbolBean implements Serializable {
 		CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
 		List<Predicate> predicatesList = new ArrayList<Predicate>();
 
+		Image image = this.example.getImage();
+		if (image != null) {
+			predicatesList.add(builder.equal(root.get("image"), image));
+		}
 		MultiviewSymbol multiviewSymbol = this.example.getMultiviewSymbol();
 		if (multiviewSymbol != null) {
 			predicatesList.add(builder.equal(root.get("multiviewSymbol"),
@@ -291,14 +280,14 @@ public class ViewSymbolBean implements Serializable {
 
 			@Override
 			public Object getAsObject(FacesContext context,
-					UIComponent component, String value) {
+									  UIComponent component, String value) {
 
 				return ejbProxy.findById(Integer.valueOf(value));
 			}
 
 			@Override
 			public String getAsString(FacesContext context,
-					UIComponent component, Object value) {
+									  UIComponent component, Object value) {
 
 				if (value == null) {
 					return "";

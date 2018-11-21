@@ -25,7 +25,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import dictionary.entity.Image;
-import dictionary.entity.ViewSymbolHasImage;
+import dictionary.entity.ViewSymbol;
 import java.util.Iterator;
 
 /**
@@ -132,14 +132,13 @@ public class ImageBean implements Serializable {
 
 		try {
 			Image deletableEntity = findById(getId());
-			Iterator<ViewSymbolHasImage> iterViewSymbolHasImages = deletableEntity
-					.getViewSymbolHasImages().iterator();
-			for (; iterViewSymbolHasImages.hasNext();) {
-				ViewSymbolHasImage nextInViewSymbolHasImages = iterViewSymbolHasImages
-						.next();
-				nextInViewSymbolHasImages.setImage(null);
-				iterViewSymbolHasImages.remove();
-				this.entityManager.merge(nextInViewSymbolHasImages);
+			Iterator<ViewSymbol> iterViewSymbols = deletableEntity
+					.getViewSymbols().iterator();
+			for (; iterViewSymbols.hasNext();) {
+				ViewSymbol nextInViewSymbols = iterViewSymbols.next();
+				nextInViewSymbols.setImage(null);
+				iterViewSymbols.remove();
+				this.entityManager.merge(nextInViewSymbols);
 			}
 			this.entityManager.remove(deletableEntity);
 			this.entityManager.flush();
@@ -258,14 +257,14 @@ public class ImageBean implements Serializable {
 
 			@Override
 			public Object getAsObject(FacesContext context,
-					UIComponent component, String value) {
+									  UIComponent component, String value) {
 
 				return ejbProxy.findById(Integer.valueOf(value));
 			}
 
 			@Override
 			public String getAsString(FacesContext context,
-					UIComponent component, Object value) {
+									  UIComponent component, Object value) {
 
 				if (value == null) {
 					return "";

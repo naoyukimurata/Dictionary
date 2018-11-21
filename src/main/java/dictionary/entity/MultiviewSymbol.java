@@ -57,7 +57,7 @@ public class MultiviewSymbol implements java.io.Serializable {
 		this.caption = caption;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "multiviewSymbol")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "multiviewSymbol")
 	public Set<ViewSymbol> getViewSymbols() {
 		return this.viewSymbols;
 	}
@@ -66,7 +66,7 @@ public class MultiviewSymbol implements java.io.Serializable {
 		this.viewSymbols = viewSymbols;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "multiviewSymbol")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "multiviewSymbol")
 	public Set<SymbolGraphic> getSymbolGraphics() {
 		return this.symbolGraphics;
 	}

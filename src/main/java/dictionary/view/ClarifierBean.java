@@ -26,7 +26,6 @@ import javax.persistence.criteria.Root;
 
 import dictionary.entity.Clarifier;
 import dictionary.entity.Meaning;
-import dictionary.entity.ViewSymbolHasClarifier;
 import java.util.Iterator;
 
 /**
@@ -140,15 +139,6 @@ public class ClarifierBean implements Serializable {
 				nextInMeanings.setClarifier(null);
 				iterMeanings.remove();
 				this.entityManager.merge(nextInMeanings);
-			}
-			Iterator<ViewSymbolHasClarifier> iterViewSymbolHasClarifiers = deletableEntity
-					.getViewSymbolHasClarifiers().iterator();
-			for (; iterViewSymbolHasClarifiers.hasNext();) {
-				ViewSymbolHasClarifier nextInViewSymbolHasClarifiers = iterViewSymbolHasClarifiers
-						.next();
-				nextInViewSymbolHasClarifiers.setClarifier(null);
-				iterViewSymbolHasClarifiers.remove();
-				this.entityManager.merge(nextInViewSymbolHasClarifiers);
 			}
 			this.entityManager.remove(deletableEntity);
 			this.entityManager.flush();
@@ -269,14 +259,14 @@ public class ClarifierBean implements Serializable {
 
 			@Override
 			public Object getAsObject(FacesContext context,
-					UIComponent component, String value) {
+									  UIComponent component, String value) {
 
 				return ejbProxy.findById(Integer.valueOf(value));
 			}
 
 			@Override
 			public String getAsString(FacesContext context,
-					UIComponent component, Object value) {
+									  UIComponent component, Object value) {
 
 				if (value == null) {
 					return "";

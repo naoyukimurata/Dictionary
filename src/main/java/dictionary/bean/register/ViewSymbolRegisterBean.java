@@ -4,10 +4,8 @@ import dictionary.SubFunction;
 import dictionary.entity.Image;
 import dictionary.entity.Meaning;
 import dictionary.entity.MultiviewSymbol;
-import dictionary.facade.ClarifierFacade;
-import dictionary.facade.ImageFacade;
-import dictionary.facade.MeaningFacade;
-import dictionary.facade.MultiviewSymbolFacade;
+import dictionary.entity.ViewSymbol;
+import dictionary.facade.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,11 +37,16 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
     ImageFacade imageFacade;
     @Inject
     MultiviewSymbolFacade multiviewSymbolFacade;
+    @Inject
+    ViewSymbolFacade viewSymbolFacade;
 
     @Setter @Getter
     private int msId;
     @Setter @Getter
     private MultiviewSymbol multiviewSymbol;
+
+    @Setter @Getter
+    private ViewSymbol viewSymbol;
 
     @Getter @Setter
     private String selectedObjectId = "-1";
@@ -87,6 +90,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         image.setName("TEST");
         multiviewSymbol = multiviewSymbolFacade.findOne(msId);
         selectedMeanList = new ArrayList<>();
+        viewSymbol = new ViewSymbol();
     }
 
     public Map<String, String> getObjects() {
@@ -224,8 +228,10 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         System.out.println("I:"+selectedIndId);
         System.out.println("C:"+selectedCollId);
 
-        if(selectedObjectId != "-1" && selectedObjectId != null)
+        if(selectedObjectId != "-1" && selectedObjectId != null) {
             selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedObjectId)));
+
+        }
         if(selectedTimeId != "-1" && selectedTimeId != null)
             selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedTimeId)));
         if(selectedPlaceId != "-1" && selectedPlaceId != null)
@@ -246,6 +252,12 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         image.setName(Integer.toString(image.getId()));
         imageFacade.update(image);
         uploadImage(file,"/image/",Integer.toString(image.getId()));
+
+        viewSymbol.setName("test");
+        viewSymbol.setImage(image);
+        viewSymbol.setMultiviewSymbol(multiviewSymbol);
+        viewSymbolFacade.create(viewSymbol);
+        viewSymbol.setName(multiviewSymbol.getCaption()+"-"+viewSymbol.getId());
 
         // View Symbol作成
         imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"),
