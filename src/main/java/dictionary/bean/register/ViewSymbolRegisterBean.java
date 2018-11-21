@@ -23,6 +23,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,11 +78,15 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
     @Setter @Getter
     private Part file;
     @Setter @Getter
-    private Image image = new Image();
+    private Image image;
+
+    private List<Meaning> selectedMeanList;
 
     public void init() {
+        image = new Image();
         image.setName("TEST");
         multiviewSymbol = multiviewSymbolFacade.findOne(msId);
+        selectedMeanList = new ArrayList<>();
     }
 
     public Map<String, String> getObjects() {
@@ -210,7 +215,32 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         //if(allNull()) judge();
     }
 
+    // 選択されたMeaningをリストに格納
+    public void checkSelect() {
+        System.out.println("O:"+selectedObjectId);
+        System.out.println("T:"+selectedTimeId);
+        System.out.println("P:"+selectedPlaceId);
+        System.out.println("S:"+selectedSituId);
+        System.out.println("I:"+selectedIndId);
+        System.out.println("C:"+selectedCollId);
+
+        if(selectedObjectId != "-1" && selectedObjectId != null)
+            selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedObjectId)));
+        if(selectedTimeId != "-1" && selectedTimeId != null)
+            selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedTimeId)));
+        if(selectedPlaceId != "-1" && selectedPlaceId != null)
+            selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedPlaceId)));
+        if(selectedSituId != "-1" && selectedSituId != null)
+            selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedSituId)));
+        if(selectedIndId != "-1" && selectedIndId != null)
+            selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedIndId)));
+        if(selectedCollId != "-1" && selectedCollId != null)
+            selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedCollId)));
+    }
+
     public void create() {
+        checkSelect();
+
         // 画像保存
         imageFacade.create(image);
         image.setName(Integer.toString(image.getId()));
@@ -218,7 +248,14 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         uploadImage(file,"/image/",Integer.toString(image.getId()));
 
         // View Symbol作成
-        imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"), "/vs/"+multiviewSymbol.getCaption()+"/m/");
+        imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"),
+                "/vs/"+multiviewSymbol.getCaption()+"/s/", multiviewSymbol.getCaption()+"-"+Integer.toString(image.getId())+"_s", 200);
+        imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"),
+                "/vs/"+multiviewSymbol.getCaption()+"/m/", multiviewSymbol.getCaption()+"-"+Integer.toString(image.getId())+"_m",500);
+        imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"),
+                "/vs/"+multiviewSymbol.getCaption()+"/l/", multiviewSymbol.getCaption()+"-"+Integer.toString(image.getId())+"_l",800);
+
+        init();
     }
 
     public BufferedImage getImg(String imageUrl) {
@@ -235,21 +272,21 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         return img;
     }
 
-    private void imgProc(BufferedImage bufImg, String output) {
+    private void imgProc(BufferedImage bufImg, String outputPath, String name, int size) {
 
         int w = bufImg.getWidth();
         int h = bufImg.getHeight();
 
-        int SIZE = 600;
+        int SIZE = size;
         int width = SIZE,height = SIZE;
 
         BufferedImage squBufImg = null;
         if(w > h) {
             height = width * h / w;
-            squBufImg = new BufferedImage(SIZE, height + 100, BufferedImage.TYPE_INT_BGR);
+            squBufImg = new BufferedImage(SIZE, height + size/6, BufferedImage.TYPE_INT_BGR);
         } else {
-            width = 500  * w / h;
-            height = 500;
+            width = size/6*5  * w / h;
+            height = size/6*5;
             squBufImg = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_BGR);
         }
 
@@ -257,29 +294,34 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         BufferedImage dst = new BufferedImage(width, height, bufImg.getType() );
         xform.filter(bufImg, dst);
 
+        int line = SIZE / selectedMeanList.size();
         int white = 255, black = 0, rgb = 0;
         if(width == SIZE) {
-            for(int y = 0 ; y < height+100 ; y++) {
+            for(int y = 0 ; y < height+size/6 ; y++) {
                 for (int x = 0; x < width; x++) {
                     if(y == 0 || x == width-1 || y == height) rgb = 0xff000000 | black << 16 | black << 8 | black;
                     else if(y < height) {
                         if(x == 0) rgb = 0xff000000 | black << 16 | black << 8 | black;
                         else rgb = dst.getRGB(x,y);
                     } else {
-                        if(x!= 0 && x%100==0) rgb = 0xff000000 | black << 16 | black << 8 | black;
-                        else if(x == 0 || x==width-1 || y==height+99) rgb =  0xff000000 | black << 16 | black << 8 | black;
+                        if(x!= 0 && x%line==0) {
+                            if(line*selectedMeanList.size() != x) {
+                                rgb =  0xff000000 | black << 16 | black << 8 | black;
+                            }
+                        }
+                        else if(x == 0 || x==width-1 || y==height+size/6-1) rgb =  0xff000000 | black << 16 | black << 8 | black;
                         else rgb = 0xff000000 | white << 16 | white << 8 | white;
                     }
                     squBufImg.setRGB(x,y,rgb);
                 }
             }
         } else {
-            int space = (600-width)/2;
+            int space = (size-width)/2;
             for(int y = 0 ; y < SIZE ; y++) {
                 for (int x = 0; x < SIZE; x++) {
                     if(y == 0) {
                         rgb =  0xff000000 | black << 16 | black << 8 | black;
-                    } else if(y < 500) {
+                    } else if(y < size/6*5) {
                         if(x < space) {
                             if(x == 0 || y == 0) rgb = 0xff000000 | black << 16 | black << 8 | black;
                             else rgb = 0xff000000 | white << 16 | white << 8 | white;
@@ -290,7 +332,11 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
                             else rgb = 0xff000000 | white << 16 | white << 8 | white;
                         }
                     } else {
-                        if((x!= 0 && x%100==0) || y == 500) rgb =  0xff000000 | black << 16 | black << 8 | black;
+                        if((x!= 0 && x%line==0) || y == size/6*5) {
+                            if(line*selectedMeanList.size() != x) {
+                                rgb =  0xff000000 | black << 16 | black << 8 | black;
+                            }
+                        }
                         else if(x == 0 || x==SIZE-1 || y==SIZE-1) rgb =  0xff000000 | black << 16 | black << 8 | black;
                         else rgb = 0xff000000 | white << 16 | white << 8 | white;
                     }
@@ -299,37 +345,19 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             }
         }
 
+        System.out.println((int) (size*0.8));
+
         // アイコン追加
-        /*if(selectedWhenId != "-1") {
-            TagIcon tagIcon = tagIconFacade.findOneById(Integer.parseInt(selectedWhenId));
-            cPicTitle += "_" + tagIcon.getName();
-            tagIconList.add(tagIcon);
-            squBufImg = addIcon(10, squBufImg, getImg("/tag_icon/when/" + tagIcon.getName() + ".jpg"));
+        int i = 1;
+        int xStart = (size/selectedMeanList.size())/2-((int) (size/6*0.4));
+        System.out.println("xstart:"+xStart);
+        for(Meaning meaning : selectedMeanList) {
+            if(i != 1) xStart += size/selectedMeanList.size();
+            System.out.println("icon-size:"+height/6*0.9);
+            squBufImg = addIcon(xStart, (int) (height/6), squBufImg, getImg("/c_icon/" + meaning.getClarifier().getTypeName() + ".jpg"));
+            i++;
         }
-        if(selectedWhereId != "-1") {
-            TagIcon tagIcon = tagIconFacade.findOneById(Integer.parseInt(selectedWhereId));
-            cPicTitle += "_" + tagIcon.getName();
-            tagIconList.add(tagIcon);
-            squBufImg = addIcon(110, squBufImg, getImg("/tag_icon/where/" + tagIcon.getName() + ".jpg"));
-        }
-        if(selectedWhoId != "-1") {
-            TagIcon tagIcon = tagIconFacade.findOneById(Integer.parseInt(selectedWhoId));
-            cPicTitle += "_" + tagIcon.getName();
-            tagIconList.add(tagIcon);
-            squBufImg = addIcon(210, squBufImg, getImg("/tag_icon/who/" + tagIcon.getName() + ".jpg"));
-        }
-        if(selectedWhatId != "-1") {
-            TagIcon tagIcon = tagIconFacade.findOneById(Integer.parseInt(selectedWhatId));
-            cPicTitle += "_" + tagIcon.getName();
-            tagIconList.add(tagIcon);
-            squBufImg = addIcon(310, squBufImg, getImg("/tag_icon/what/" + tagIcon.getName() + ".jpg"));
-        }
-        if(selectedWhyId != "-1") {
-            TagIcon tagIcon = tagIconFacade.findOneById(Integer.parseInt(selectedWhyId));
-            cPicTitle += "_" + tagIcon.getName();
-            tagIconList.add(tagIcon);
-            squBufImg = addIcon(410, squBufImg, getImg("/tag_icon/why/" + tagIcon.getName() + ".jpg"));
-        }*/
+
         //cPicTitle += "_" + tagIcon.getName();
         //tagIconList.add(tagIcon);
         //squBufImg = addIcon(510, squBufImg, getImg("/tag_icon/how/" + tagIcon.getName() + ".jpg"));
@@ -349,15 +377,42 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         // byte配列をinputstreamに変換
         InputStream is = new ByteArrayInputStream(imageInByte);
 
-        String filename = "test_m" + ".jpg";
+        String filename = name + ".jpg";
         ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String filepath = ctx.getRealPath("resources");
         try {
-            Files.copy(is, new File(filepath + output, filename).toPath());
+            Files.copy(is, new File(filepath + outputPath, filename).toPath());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        //return is;
+    public BufferedImage addIcon(int xStart, int iconSize, BufferedImage squBufImg, BufferedImage icon) {
+        AffineTransformOp form = new AffineTransformOp( AffineTransform.getScaleInstance( (double)iconSize/icon.getWidth(), (double)iconSize/icon.getHeight()), AffineTransformOp.TYPE_BILINEAR );
+        BufferedImage dst = new BufferedImage(iconSize, iconSize, icon.getType());
+        form.filter(icon, dst);
+
+        int rgb = 0, xx = 0, yy = 0;
+        System.out.println("height:"+squBufImg.getHeight());
+        System.out.println(squBufImg.getHeight()/6);
+        System.out.println(iconSize*0.1);
+
+        System.out.println("(int) (squBufImg.getHeight() - squBufImg.getHeight()/6*0.9):"+(int) (squBufImg.getHeight() - squBufImg.getHeight()/6*0.9));
+        System.out.println("iconSize-squBufImg.getHeight()/6*0.1:"+(int)(squBufImg.getHeight()-squBufImg.getHeight()/6*0.9));
+        for(int y = (int) (squBufImg.getHeight() - squBufImg.getHeight()/6*0.9); y < squBufImg.getHeight()-squBufImg.getHeight()/6*0.9-1 + iconSize ; y++) {
+            System.out.println(y);
+            xx = 0;
+            for(int x = xStart ; x < xStart+iconSize; x++) {
+                //System.out.println(x);
+                //System.out.println("xx:"+xx);
+                //System.out.println("yy:"+yy);
+                rgb = dst.getRGB(xx,yy);
+                squBufImg.setRGB(x,y,rgb);
+                xx++;
+            }
+            yy++;
+        }
+
+        return squBufImg;
     }
 }
