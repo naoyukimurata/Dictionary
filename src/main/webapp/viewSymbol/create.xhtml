@@ -1,167 +1,144 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:forgeview="http://jboss.org/forge/view"
-	template="/resources/scaffold/pageTemplate.xhtml">
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:jsf="http://xmlns.jcp.org/jsf"
+				template="/resources/template/pageTemplate.xhtml">
+
+	<ui:define name="head">
+		<h:outputStylesheet library="css" name="c_vs.css"/>
+	</ui:define>
 
 	<f:metadata>
-		<f:viewParam name="id" value='#{viewSymbolBean.id}'/>
-		<f:event type="preRenderView" listener='#{viewSymbolBean.retrieve}'/>
+		<f:viewParam name="id" value="#{viewSymbolRegisterBean.msId}"/>
+		<f:viewAction action="#{viewSymbolRegisterBean.init()}"/>
 	</f:metadata>
 
-	<ui:param name="pageTitle" value="Create View Symbol"/>
-
-	<ui:define name="header">
-		View Symbol
-	</ui:define>
-
-	<ui:define name="subheader">
-		<c:choose>
-			<c:when test='#{!empty viewSymbolBean.id}'>
-				Edit existing View Symbol
-			</c:when>
-			<c:otherwise>
-				Create a new View Symbol
-			</c:otherwise>
-		</c:choose>
-	</ui:define>
-
-	<ui:define name="footer"/>
-
 	<ui:define name="main">
-		<h:form id="create">
-			<h:messages globalOnly="true" styleClass="error"/>
 
-			<h:panelGrid columnClasses="label,component,required" columns="3">
-				<h:outputLabel for="viewSymbolBeanViewSymbolMultiviewSymbol" value="Multiview Symbol:"/>
-				<h:panelGroup>
-					<h:selectOneMenu converter="#{multiviewSymbolBean.converter}" id="viewSymbolBeanViewSymbolMultiviewSymbol" value="#{viewSymbolBean.viewSymbol.multiviewSymbol}">
-						<f:selectItem/>
-						<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{multiviewSymbolBean.all}" var="_item"/>
-					</h:selectOneMenu>
-					<h:message for="viewSymbolBeanViewSymbolMultiviewSymbol" styleClass="error"/>
-				</h:panelGroup>
-				<h:outputText/>
-				<h:outputLabel for="viewSymbolBeanViewSymbolName" value="Name:"/>
-				<h:panelGroup>
-					<h:inputText id="viewSymbolBeanViewSymbolName" maxLength="45" required="true" value="#{viewSymbolBean.viewSymbol.name}"/>
-					<h:message for="viewSymbolBeanViewSymbolName" styleClass="error"/>
-				</h:panelGroup>
-				<h:outputText value="*"/>
-				<h:outputLabel for="viewSymbolBeanViewSymbolViewSymbolHasClarifiers" value="View Symbol Has Clarifiers:"/>
-				<h:panelGroup>
-					<ui:param name="_collection" value="#{viewSymbolBean.viewSymbol.viewSymbolHasClarifiers}"/>
-					<h:dataTable id="viewSymbolBeanViewSymbolViewSymbolHasClarifiers" styleClass="data-table" value="#{forgeview:asList(_collection)}" var="_item">
-						<h:column>
-							<f:facet name="header">
-								<h:outputText value="Clarifier"/>
-							</f:facet>
-							<h:link outcome="/viewSymbolHasClarifier/view">
-								<f:param name="id" value="#{_item.id}"/>
-								<h:outputText id="forgeviewdisplayitemClarifier" value="#{forgeview:display(_item.clarifier)}"/>
-							</h:link>
-							<f:facet name="footer">
-								<h:selectOneMenu converter="#{clarifierBean.converter}" id="viewSymbolHasClarifierBeanAddClarifier" value="#{viewSymbolHasClarifierBean.add.clarifier}">
-									<f:selectItem/>
-									<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{clarifierBean.all}" var="_item"/>
+		<div class="centering-container">
+			<h:form id="test" enctype="multipart/form-data">
+				<div jsf:id="select-word">
+					<table border="1" align="center">
+						<tr>
+							<td colspan="1" class="item">
+								<h6>画像</h6>
+							</td>
+							<td colspan="6" style="width: 800px;">
+								<div class="form-group">
+									<label>画像を選択してください</label>
+									<h:inputFile id="file" value="#{viewSymbolRegisterBean.file}">
+										<f:validator validatorId="fileUploadValidator"/>
+									</h:inputFile>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1" class="item">
+								<h6>Clarifier</h6>
+							</td>
+							<td class="ws"><h4>Object</h4></td>
+							<td class="ws"><h4>Time</h4></td>
+							<td class="ws"><h4>Place</h4></td>
+							<td class="ws"><h4>Situation</h4></td>
+							<td class="ws"><h4>Individual</h4></td>
+							<td class="ws"><h4>Collective</h4></td>
+						</tr>
+						<tr>
+							<td colspan="1" class="item">
+								<h6>Meaning</h6>
+							</td>
+							<td>
+								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedObjectId}" styleClass="form-control">
+									<f:selectItems value="#{viewSymbolRegisterBean.objects}"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.object}" render="select-word"/>
 								</h:selectOneMenu>
-								<h:message for="viewSymbolHasClarifierBeanAddClarifier" styleClass="error"/>
-							</f:facet>
-						</h:column>
-						<h:column footerClass="remove-column" headerClass="remove-column">
-							<h:commandLink action="#{_collection.remove(_item)}" styleClass="remove-button"/>
-							<f:facet name="footer">
-								<h:commandLink action="#{_collection.add(viewSymbolHasClarifierBean.added)}" id="viewSymbolBeanViewSymbolViewSymbolHasClarifiersAdd" styleClass="add-button">
-									<f:setPropertyActionListener target="#{viewSymbolHasClarifierBean.add.viewSymbol}" value="#{viewSymbolBean.viewSymbol}"/>
-								</h:commandLink>
-							</f:facet>
-						</h:column>
-					</h:dataTable>
-				</h:panelGroup>
-				<h:outputText/>
-				<h:outputLabel for="viewSymbolBeanViewSymbolViewSymbolHasImages" value="View Symbol Has Images:"/>
-				<h:panelGroup>
-					<ui:param name="_collection" value="#{viewSymbolBean.viewSymbol.viewSymbolHasImages}"/>
-					<h:dataTable id="viewSymbolBeanViewSymbolViewSymbolHasImages" styleClass="data-table" value="#{forgeview:asList(_collection)}" var="_item">
-						<h:column>
-							<f:facet name="header">
-								<h:outputText value="Image"/>
-							</f:facet>
-							<h:link outcome="/viewSymbolHasImage/view">
-								<f:param name="id" value="#{_item.id}"/>
-								<h:outputText id="forgeviewdisplayitemImage" value="#{forgeview:display(_item.image)}"/>
-							</h:link>
-							<f:facet name="footer">
-								<h:selectOneMenu converter="#{imageBean.converter}" id="viewSymbolHasImageBeanAddImage" value="#{viewSymbolHasImageBean.add.image}">
-									<f:selectItem/>
-									<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{imageBean.all}" var="_item"/>
+							</td>
+							<td>
+								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedTimeId}" styleClass="form-control">
+									<f:selectItems value="#{viewSymbolRegisterBean.times}"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.time}" render="select-word"/>
 								</h:selectOneMenu>
-								<h:message for="viewSymbolHasImageBeanAddImage" styleClass="error"/>
-							</f:facet>
-						</h:column>
-						<h:column footerClass="remove-column" headerClass="remove-column">
-							<h:commandLink action="#{_collection.remove(_item)}" styleClass="remove-button"/>
-							<f:facet name="footer">
-								<h:commandLink action="#{_collection.add(viewSymbolHasImageBean.added)}" id="viewSymbolBeanViewSymbolViewSymbolHasImagesAdd" styleClass="add-button">
-									<f:setPropertyActionListener target="#{viewSymbolHasImageBean.add.viewSymbol}" value="#{viewSymbolBean.viewSymbol}"/>
-								</h:commandLink>
-							</f:facet>
-						</h:column>
-					</h:dataTable>
-				</h:panelGroup>
-				<h:outputText/>
-				<h:outputLabel for="viewSymbolBeanViewSymbolViewSymbolHasMeanings" value="View Symbol Has Meanings:"/>
-				<h:panelGroup>
-					<ui:param name="_collection" value="#{viewSymbolBean.viewSymbol.viewSymbolHasMeanings}"/>
-					<h:dataTable id="viewSymbolBeanViewSymbolViewSymbolHasMeanings" styleClass="data-table" value="#{forgeview:asList(_collection)}" var="_item">
-						<h:column>
-							<f:facet name="header">
-								<h:outputText value="Meaning"/>
-							</f:facet>
-							<h:link outcome="/viewSymbolHasMeaning/view">
-								<f:param name="id" value="#{_item.id}"/>
-								<h:outputText id="forgeviewdisplayitemMeaning" value="#{forgeview:display(_item.meaning)}"/>
-							</h:link>
-							<f:facet name="footer">
-								<h:selectOneMenu converter="#{meaningBean.converter}" id="viewSymbolHasMeaningBeanAddMeaning" value="#{viewSymbolHasMeaningBean.add.meaning}">
-									<f:selectItem/>
-									<f:selectItems itemLabel="#{forgeview:display(_item)}" itemValue="#{_item}" value="#{meaningBean.all}" var="_item"/>
+							</td>
+							<td>
+								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedPlaceId}" styleClass="form-control">
+									<f:selectItems value="#{viewSymbolRegisterBean.places}"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.place}" render="select-word"/>
 								</h:selectOneMenu>
-								<h:message for="viewSymbolHasMeaningBeanAddMeaning" styleClass="error"/>
-							</f:facet>
-						</h:column>
-						<h:column footerClass="remove-column" headerClass="remove-column">
-							<h:commandLink action="#{_collection.remove(_item)}" styleClass="remove-button"/>
-							<f:facet name="footer">
-								<h:commandLink action="#{_collection.add(viewSymbolHasMeaningBean.added)}" id="viewSymbolBeanViewSymbolViewSymbolHasMeaningsAdd" styleClass="add-button">
-									<f:setPropertyActionListener target="#{viewSymbolHasMeaningBean.add.viewSymbol}" value="#{viewSymbolBean.viewSymbol}"/>
-								</h:commandLink>
-							</f:facet>
-						</h:column>
-					</h:dataTable>
-				</h:panelGroup>
-				<h:outputText/>
-			</h:panelGrid>
+							</td>
+							<td>
+								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedSituId}" styleClass="form-control">
+									<f:selectItems value="#{viewSymbolRegisterBean.situations}"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.situation}" render="select-word"/>
+								</h:selectOneMenu>
+							</td>
+							<td>
+								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedIndId}" styleClass="form-control">
+									<f:selectItems value="#{viewSymbolRegisterBean.individuals}"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.individual}" render="select-word"/>
+								</h:selectOneMenu>
+							</td>
+							<td>
+								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedCollId}" styleClass="form-control">
+									<f:selectItems value="#{viewSymbolRegisterBean.collectives}"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.collective}" render="select-word"/>
+								</h:selectOneMenu>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1" class="item">
+								<h6>Clarifierアイコン</h6>
+							</td>
+							<td>
+								<ui:fragment rendered="#{viewSymbolRegisterBean.selectedObjectName != null}">
+									<h:graphicImage url="../resources/c_icon/Object.jpg" class="icon"/>
+								</ui:fragment>
+							</td>
+							<td>
+								<ui:fragment rendered="#{viewSymbolRegisterBean.selectedTimeName != null}">
+									<h:graphicImage url="../resources/c_icon/Time.jpg" class="icon"/>
+								</ui:fragment>
+							</td>
+							<td>
+								<ui:fragment rendered="#{viewSymbolRegisterBean.selectedPlaceName != null}">
+									<h:graphicImage url="../resources/c_icon/Place.jpg" class="icon"/>
+								</ui:fragment>
+							</td>
+							<td>
+								<ui:fragment rendered="#{viewSymbolRegisterBean.selectedSituName != null}">
+									<h:graphicImage url="../resources/c_icon/Situation.jpg" class="icon"/>
+								</ui:fragment>
+							</td>
+							<td>
+								<ui:fragment rendered="#{viewSymbolRegisterBean.selectedIndName != null}">
+									<h:graphicImage url="../resources/c_icon/Individual.jpg" class="icon"/>
+								</ui:fragment>
+							</td>
+							<td>
+								<ui:fragment rendered="#{viewSymbolRegisterBean.selectedCollName != null}">
+									<h:graphicImage url="../resources/c_icon/Collective.jpg" class="icon"/>
+								</ui:fragment>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1" class="item">
+								<h6>View Symbol作成ボタン</h6>
+							</td>
+							<td colspan="6">
+								<h:commandButton action="#{viewSymbolRegisterBean.create()}"
+												 value="作成" class="btn btn-primary btn-block">
+									<!--f:ajax execute="@this" render=":test"/-->
+								</h:commandButton>
+							</td>
+						</tr>
+					</table>
 
-			<div class="buttons">
-				<h:commandLink value="Save" action='#{viewSymbolBean.update}' styleClass="btn btn-primary"/>
-				<c:choose>
-					<c:when test='#{!empty viewSymbolBean.id}'>
-						<h:link value="Cancel" outcome="view" styleClass="btn btn-primary">
-							<f:param name="id" value='#{viewSymbolBean.id}'/>
-						</h:link>
-						<h:commandLink value="Delete" action='#{viewSymbolBean.delete}' styleClass="btn btn-primary"/>
-					</c:when>
-					<c:otherwise>
-						<h:link value="Cancel" outcome="search" styleClass="btn btn-primary"/>
-					</c:otherwise>
-				</c:choose>
-			</div>
-		</h:form>
+
+				</div>
+			</h:form>
+		</div>
+
 	</ui:define>
-
 </ui:composition>

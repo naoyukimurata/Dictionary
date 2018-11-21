@@ -18,6 +18,42 @@ public class SubFunction {
     @Inject
     ClarifierFacade clarifierFacade;
 
+    public void createDir(String path) {
+        ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String filepath = ctx.getRealPath("resources") + path;
+
+        File newfile = new File(filepath);
+
+        if (newfile.mkdir()) System.out.println("ディレクトリの作成に成功しました");
+        else System.out.println("ディレクトリの作成に失敗しました");
+
+    }
+
+    public Boolean uploadImage(Part file, String path, String fileName) {
+        try {
+            InputStream in = file.getInputStream();
+            ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+            String filepath = ctx.getRealPath("resources") + path;
+            String filename = fileName + ".jpg";
+
+            try {
+                BufferedImage image = ImageIO.read(in);
+
+                BufferedImage tmp = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+                Graphics2D off = tmp.createGraphics();
+                off.drawImage(image, 0, 0, Color.WHITE, null);
+                ImageIO.write(tmp, "jpg", new File(filepath+filename));
+            } catch (Exception e) {
+                System.out.println("error");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
     public Boolean uploadIcon(Part file, String path, String fileName) {
         try {
             InputStream in = file.getInputStream();

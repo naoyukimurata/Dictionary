@@ -4,105 +4,60 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 template="/resources/template/pageTemplate.xhtml">
 
     <ui:define name="head">
-        <h:outputStylesheet library="css" name="clarifier.css"/>
+        <h:outputStylesheet library="css" name="ms_search.css"/>
     </ui:define>
 
     <f:metadata>
-        <f:viewAction action="#{clarifierRegisterBean.init()}"/>
+        <f:viewAction action="#{multiviewSymbolSearchBean.init()}"/>
     </f:metadata>
 
     <ui:define name="main">
-        <div id="modal-overlay"></div>
-
-        <div id="modal-content-f" class="mc">
-            <div class="modal-form">
-                <h:form>
-                    <div class="form-group">
-                        <label>名前</label>
-                        <h:inputText value="${clarifierRegisterBean.selectedClari.typeName}" id="fClariName" class="form-control" />
-                        <h:message for="fClariName" class="alert-warning"/>
-                    </div>
-                    <div>
-                        <h:commandButton action="#{clarifierRegisterBean.update()}" value="修正" class="btn btn-primary btn-block" />
-                    </div>
-                </h:form>
-                <p><a class="button-link modal-close">閉じる</a></p>
-            </div>
-        </div>
-
-        <div id="modal-content-d" class="mc">
-            <div class="modal-form">
-                <h4>このClarifierのMeaningと注釈しているMeaningも消えてしまいますが構いませんか？</h4>
-                <div id="btn-box">
-                    <h:form>
-                        <h:commandButton action="#{clarifierRegisterBean.delete()}" value="はい"
-                                         class="btn btn-primary modal-close"/>
-                        <h:commandButton value="いいえ" class="btn btn-primary modal-close"/>
-                    </h:form>
-                </div>
-            </div>
-        </div>
-
-        <div class="centering-container">
-            <ui:fragment rendered="#{flash.notice.contains('成功')}">
-                <div class="flash-success">
-                    #{flash.notice}
-                </div>
-            </ui:fragment>
-            <ui:fragment rendered="#{flash.notice.contains('失敗')}">
-                <div class="flash-error">
-                    #{flash.notice}
-                </div>
-            </ui:fragment>
-            <h3>Symbol Graphic</h3>
-            <h:form id="form" enctype="multipart/form-data">
-                <div class="content-form">
-                    <div class="form-group">
-                        <label>Caption・SG名</label>
-                        <h:inputText value="#{clarifierRegisterBean.clarifier.typeName}"
-                                     id="cTypeName" class="form-control"/>
-                        <h:message for="cTypeName" class="alert-warning"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Symbol Graphic</label>
-                        <h:inputFile id="file" value="#{clarifierRegisterBean.file}">
-                            <f:validator validatorId="fileUploadValidator"/>
-                        </h:inputFile>
-                    </div>
-                    <h:commandButton action="#{clarifierRegisterBean.register()}"
-                                     value="登録" class="btn btn-primary btn-block" />
-                </div>
-
-                <h3>一覧</h3>
-                <div class="content-l">
-                    <ul>
-                        <ui:repeat value="#{clarifierRegisterBean.clarifierList}" var="_c">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar col-sm-2 hidden-xs">
+                    <ul class="menu-list">
+                        <ui:repeat value="#{multiviewSymbolSearchBean.multiviewSymbolList}" var="_ms">
                             <li>
-                                <div class="cell">
-                                    <h:graphicImage url="../resources/c_icon/#{_c.typeName}.jpg"/>
-                                    <h3>#{_c.typeName}</h3>
-                                    <div class="cell-footer">
-                                        <h:commandButton action="#{clarifierRegisterBean.linkMeaning(_c.id)}"
-                                                         image="../resources/icon/meaning.png"
-                                                         class="icon">
-                                            <f:ajax render="@form"/>
-                                        </h:commandButton>
-                                        <h:commandButton onclick="showUpdateForm()" image="../resources/icon/fix.png" class="icon">
-                                            <f:ajax render="fix-modal"/>
-                                            <f:setPropertyActionListener value="#{_c.id}" target="#{clarifierRegisterBean.selectedClariId}"/>
-                                        </h:commandButton>
-                                        <h:commandButton onclick="showDeleteForm()" image="../resources/icon/trash.png" class="icon">
-                                            <f:ajax render="@form"/>
-                                            <f:setPropertyActionListener value="#{_c.id}" target="#{clarifierRegisterBean.selectedClariId}"/>
-                                        </h:commandButton>
-                                    </div>
-                                </div>
+                                <a href="##{_ms.caption}" class="a-label">► #{_ms.caption}</a>
                             </li>
                         </ui:repeat>
                     </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-10 col-sm-offset-2">
+            <div id="modal-overlay"></div>
+            <h:form enctype="multipart/form-data">
+
+
+                <!-- 画像一覧 -->
+                <div id="main-contents">
+                    <div jsf:id="picture-list">
+                        <div class="message">
+                            <h:messages />
+                        </div>
+                        
+                        <ui:repeat value="#{multiviewSymbolSearchBean.multiviewSymbolList}" var="_ms">
+                            <div class="content content-back">
+                                <h3 id="#{_ms.caption}">■ #{_ms.caption}</h3>
+                                <div class="row">
+                                    <div class="col-sm-12 re">
+                                        <h:link outcome="/viewSymbol/create.xhtml?id=#{_ms.id}">
+                                            <h:graphicImage url="../resources/icon/add.png" class="add-btn"/>
+                                        </h:link>
+                                    </div>
+                                </div>
+                            </div>
+                        </ui:repeat>
+                        <h:outputScript library="js" name="zoom-pic.js"/>
+                        <h:outputScript library="js" name="jquery.fs.tipper.min.js"/>
+                        <h:outputScript library="js" name="picture.js"/>
+                    </div>
                 </div>
             </h:form>
         </div>

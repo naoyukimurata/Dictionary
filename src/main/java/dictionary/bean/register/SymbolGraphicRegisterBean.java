@@ -47,6 +47,11 @@ public class SymbolGraphicRegisterBean extends SubFunction implements Serializab
         if(!uploadIcon(file, "/sg/", symbolGraphic.getName())) {
             facesContext.getExternalContext().getFlash().put("notice", "登録失敗：アイコンが正方形ではありません");
             return "/clarifier/create?faces-redirect=true";
+        } else {
+            createDir("/vs/"+symbolGraphic.getName());
+            createDir("/vs/"+symbolGraphic.getName()+"/s");
+            createDir("/vs/"+symbolGraphic.getName()+"/m");
+            createDir("/vs/"+symbolGraphic.getName()+"/l");
         }
 
         // Multi-view Symbol作成

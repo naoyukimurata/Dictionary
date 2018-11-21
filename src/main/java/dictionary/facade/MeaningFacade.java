@@ -59,4 +59,13 @@ public class MeaningFacade {
 
         return meaningList;
     }
+
+    public List<Meaning> findAllByClariId(int cId) {
+        String jpql = "SELECT m FROM Meaning m WHERE m.clarifier.id = :cId";
+        TypedQuery<Meaning> query = em.createQuery(jpql, Meaning.class);
+        query.setParameter("cId", cId);
+        List<Meaning> meaningList = query.getResultList();
+
+        return meaningList;
+    }
 }

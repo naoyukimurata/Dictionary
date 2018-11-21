@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Stateless
 public class MultiviewSymbolFacade {
@@ -36,5 +37,22 @@ public class MultiviewSymbolFacade {
         } catch (Exception e) {
             return true;
         }
+    }
+
+    public MultiviewSymbol findOne(int msId) {
+        String jpql = "SELECT ms FROM MultiviewSymbol ms WHERE ms.id = :msId";
+        TypedQuery<MultiviewSymbol> query = em.createQuery(jpql, MultiviewSymbol.class);
+        query.setParameter("msId", msId);
+        MultiviewSymbol multiviewSymbol = query.getSingleResult();
+
+        return multiviewSymbol;
+    }
+
+    public List<MultiviewSymbol> findAll() {
+        String jpql = "SELECT m FROM MultiviewSymbol m";
+        TypedQuery<MultiviewSymbol> query = em.createQuery(jpql, MultiviewSymbol.class);
+        List<MultiviewSymbol> multiviewSymbolList = query.getResultList();
+
+        return multiviewSymbolList;
     }
 }

@@ -51,6 +51,15 @@ public class ClarifierFacade {
 
         return clarifier;
     }
+
+    public Clarifier findOneByTypeName(String tName) {
+        String jpql = "SELECT c FROM Clarifier c WHERE c.typeName = :tName";
+        TypedQuery<Clarifier> query = em.createQuery(jpql, Clarifier.class);
+        query.setParameter("tName", tName);
+        Clarifier clarifier = query.getSingleResult();
+
+        return clarifier;
+    }
     
     public List<Clarifier> findAll() {
         String jpql = "SELECT c FROM Clarifier c";
