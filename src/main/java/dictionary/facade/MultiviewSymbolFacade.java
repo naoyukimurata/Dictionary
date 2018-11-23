@@ -52,6 +52,15 @@ public class MultiviewSymbolFacade {
         return multiviewSymbol;
     }
 
+    public MultiviewSymbol findOneByCap(String caption) {
+        String jpql = "SELECT ms FROM MultiviewSymbol ms WHERE ms.caption = :msCap";
+        TypedQuery<MultiviewSymbol> query = em.createQuery(jpql, MultiviewSymbol.class);
+        query.setParameter("msCap", caption);
+        MultiviewSymbol multiviewSymbol = query.getSingleResult();
+
+        return multiviewSymbol;
+    }
+
     public List<MultiviewSymbol> findAll() {
         String jpql = "SELECT m FROM MultiviewSymbol m";
         TypedQuery<MultiviewSymbol> query = em.createQuery(jpql, MultiviewSymbol.class);
