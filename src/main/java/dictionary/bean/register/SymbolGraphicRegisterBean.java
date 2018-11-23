@@ -3,6 +3,7 @@ package dictionary.bean.register;
 import dictionary.SubFunction;
 import dictionary.entity.MultiviewSymbol;
 import dictionary.entity.SymbolGraphic;
+import dictionary.entity.ViewSymbol;
 import dictionary.facade.MultiviewSymbolFacade;
 import dictionary.facade.SymbolGraphicFacade;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class SymbolGraphicRegisterBean extends SubFunction implements Serializab
     @Setter @Getter
     private MultiviewSymbol multiviewSymbol = new MultiviewSymbol();
 
+    @Setter
+    private String selectedSgId;
+
     @Getter
     private List<SymbolGraphic> symbolGraphicList = new ArrayList<>();
 
@@ -60,6 +64,29 @@ public class SymbolGraphicRegisterBean extends SubFunction implements Serializab
         // Symbol Graphic作成
         symbolGraphic.setMultiviewSymbol(multiviewSymbol);
         symbolGraphicFacade.create(symbolGraphic);
+
+        return "/multiviewSymbol/create?faces-redirect=true";
+    }
+
+    public String delete() {
+        SymbolGraphic symbolGraphic = symbolGraphicFacade.findOne(Integer.parseInt(selectedSgId));
+        MultiviewSymbol multiviewSymbol = symbolGraphic.getMultiviewSymbol();
+
+        for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols())
+            deleteViewSymbol(viewSymbol);
+
+        try {
+            deleteDir("/vs/"+symbolGraphic.getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        deleteFile("/sg/", symbolGraphic.getName()+".jpg");
+        symbolGraphicFacade.remove(symbolGraphic);
+
+        multiviewSymbol.setViewSymbols(null);
+        multiviewSymbol.setSymbolGraphics(null);
+        multiviewSymbolFacade.remove(multiviewSymbol);
 
         return "/multiviewSymbol/create?faces-redirect=true";
     }

@@ -22,6 +22,19 @@ public class SymbolGraphicFacade {
         em.merge(symbolGraphic);
     }
 
+    public void remove(SymbolGraphic symbolGraphic) {
+        em.remove(em.merge(symbolGraphic));
+    }
+
+    public SymbolGraphic findOne(int id) {
+        String jpql = "SELECT sg FROM SymbolGraphic sg WHERE sg.id = :sgId";
+        TypedQuery<SymbolGraphic> query = em.createQuery(jpql, SymbolGraphic.class);
+        query.setParameter("sgId", id);
+        SymbolGraphic symbolGraphic = query.getSingleResult();
+
+        return symbolGraphic;
+    }
+
     public List<SymbolGraphic> findAll() {
         String jpql = "SELECT m FROM SymbolGraphic m";
         TypedQuery<SymbolGraphic> query = em.createQuery(jpql, SymbolGraphic.class);

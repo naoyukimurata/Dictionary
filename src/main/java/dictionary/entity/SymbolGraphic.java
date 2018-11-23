@@ -41,7 +41,7 @@ public class SymbolGraphic implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "multiview_symbol_id", nullable = false)
 	public MultiviewSymbol getMultiviewSymbol() {
 		return this.multiviewSymbol;

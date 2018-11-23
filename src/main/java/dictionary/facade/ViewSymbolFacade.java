@@ -22,6 +22,10 @@ public class ViewSymbolFacade {
         em.merge(viewSymbol);
     }
 
+    public void remove(ViewSymbol viewSymbol) {
+        em.remove(em.merge(viewSymbol));
+    }
+
     public List<SymbolGraphic> findAll() {
         String jpql = "SELECT m FROM SymbolGraphic m";
         TypedQuery<SymbolGraphic> query = em.createQuery(jpql, SymbolGraphic.class);

@@ -33,8 +33,6 @@
         <div class="col-sm-10 col-sm-offset-2">
             <div id="modal-overlay"></div>
             <h:form enctype="multipart/form-data">
-
-
                 <!-- 画像一覧 -->
                 <div id="main-contents">
                     <div jsf:id="picture-list">
@@ -47,17 +45,15 @@
                                 <div class="row">
                                     <div class="col-sm-12 re">
                                         <ul jsf:id="pic-list">
-                                            <ui:repeat value="#{multiviewSymbolSearchBean.getPictures(_ms)}" var="_pic">
+                                            <ui:repeat value="#{multiviewSymbolSearchBean.getPictures(_ms)}" var="_vs">
                                                 <li>
                                                     <div class="pic-cell">
                                                         <div class="images">
-                                                            <h:graphicImage url="../resources/vs/#{_ms.caption}/m/#{_ms.caption}-#{_pic.image.id}_m.jpg"/>
+                                                            <h:graphicImage url="../resources/vs/#{_ms.caption}/m/#{_ms.caption}-#{_vs.image.id}_m.jpg"/>
                                                         </div>
                                                         <div class="footer">
-                                                            <h:commandButton
-                                                                    onclick="message()"
-                                                                    image="../resources/icon/trash.png"
-                                                                    class="icon">
+                                                            <h:commandButton onclick="message()" action="#{multiviewSymbolSearchBean.delete(_vs)}"
+                                                                    image="../resources/icon/trash.png" class="icon">
                                                                 <f:ajax render="@form"/>
                                                             </h:commandButton>
                                                         </div>

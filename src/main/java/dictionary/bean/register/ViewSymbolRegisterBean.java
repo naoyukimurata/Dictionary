@@ -1,10 +1,7 @@
 package dictionary.bean.register;
 
 import dictionary.SubFunction;
-import dictionary.entity.Image;
-import dictionary.entity.Meaning;
-import dictionary.entity.MultiviewSymbol;
-import dictionary.entity.ViewSymbol;
+import dictionary.entity.*;
 import dictionary.facade.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,10 +18,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Named
 @ViewScoped
@@ -39,6 +33,8 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
     MultiviewSymbolFacade multiviewSymbolFacade;
     @Inject
     ViewSymbolFacade viewSymbolFacade;
+    @Inject
+    ViewSymbolHasMeaningFacade viewSymbolHasMeaningFacade;
 
     @Setter @Getter
     private int msId;
@@ -85,12 +81,59 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
 
     private List<Meaning> selectedMeanList;
 
+    @Setter @Getter
+    private List<ViewSymbol> vsList;
+
     public void init() {
         image = new Image();
         image.setName("TEST");
         multiviewSymbol = multiviewSymbolFacade.findOne(msId);
         selectedMeanList = new ArrayList<>();
         viewSymbol = new ViewSymbol();
+
+        initPicList();
+    }
+
+    public void initPicList() {
+        vsList = new ArrayList<>();
+        for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols()) {
+            Boolean j = false;
+            vsList.add(viewSymbol);
+        }
+
+        if(selectedObjectId != "-1" && selectedObjectId != null)
+            checkSameIcon("Object", Integer.parseInt(selectedObjectId));
+        if(selectedTimeId != "-1" && selectedTimeId != null)
+            checkSameIcon("Time", Integer.parseInt(selectedTimeId));
+        if(selectedPlaceId != "-1" && selectedPlaceId != null)
+            checkSameIcon("Place", Integer.parseInt(selectedPlaceId));
+        if(selectedSituId != "-1" && selectedSituId != null)
+            checkSameIcon("Situation", Integer.parseInt(selectedSituId));
+        if(selectedIndId != "-1" && selectedIndId != null)
+            checkSameIcon("Individual", Integer.parseInt(selectedIndId));
+        if(selectedCollId != "-1" && selectedCollId != null)
+            checkSameIcon("Collective", Integer.parseInt(selectedCollId));
+    }
+
+    public void checkSameIcon(String w, int id) {
+        System.out.println("select : " + id);
+        Iterator<ViewSymbol> it = vsList.iterator();
+        while(it.hasNext()) {
+            ViewSymbol vs = it.next();
+            int i = 0;
+            for(ViewSymbolHasMeaning vshm : vs.getViewSymbolHasMeanings()) {
+                if(vshm.getMeaning().getClarifier().getTypeName().equals(w)) {
+                    if(vshm.getMeaning().getId() != id) {
+                        System.out.println(vs.getName()+":"+vshm.getMeaning().getWord());
+                        it.remove();
+                        break;
+                    }
+                    break;
+                }
+                i++;
+            }
+            if(i==vs.getViewSymbolHasMeanings().size()) it.remove();
+        }
     }
 
     public Map<String, String> getObjects() {
@@ -110,7 +153,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             selectedObjectId = "-1";
             selectedObjectName = null;
         }
-        //initPicList();
+        initPicList();
         //if(allNull()) judge();
     }
 
@@ -131,7 +174,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             selectedTimeId = "-1";
             selectedTimeName = null;
         }
-        //initPicList();
+        initPicList();
         //if(allNull()) judge();
     }
 
@@ -152,7 +195,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             selectedPlaceId = "-1";
             selectedPlaceName = null;
         }
-        //initPicList();
+        initPicList();
         //if(allNull()) judge();
     }
 
@@ -173,7 +216,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             selectedSituId = "-1";
             selectedSituName = null;
         }
-        //initPicList();
+        initPicList();
         //if(allNull()) judge();
     }
 
@@ -194,7 +237,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             selectedIndId = "-1";
             selectedIndName = null;
         }
-        //initPicList();
+        initPicList();
         //if(allNull()) judge();
     }
 
@@ -215,7 +258,7 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             selectedCollId = "-1";
             selectedCollName = null;
         }
-        //initPicList();
+        initPicList();
         //if(allNull()) judge();
     }
 
@@ -228,10 +271,8 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         System.out.println("I:"+selectedIndId);
         System.out.println("C:"+selectedCollId);
 
-        if(selectedObjectId != "-1" && selectedObjectId != null) {
+        if(selectedObjectId != "-1" && selectedObjectId != null)
             selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedObjectId)));
-
-        }
         if(selectedTimeId != "-1" && selectedTimeId != null)
             selectedMeanList.add(meaningFacade.findOne(Integer.parseInt(selectedTimeId)));
         if(selectedPlaceId != "-1" && selectedPlaceId != null)
@@ -247,19 +288,33 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
     public void create() {
         checkSelect();
 
-        // 画像保存
+        // Image作成
         imageFacade.create(image);
         image.setName(Integer.toString(image.getId()));
         imageFacade.update(image);
         uploadImage(file,"/image/",Integer.toString(image.getId()));
 
+        // View Symbol作成
         viewSymbol.setName("test");
         viewSymbol.setImage(image);
         viewSymbol.setMultiviewSymbol(multiviewSymbol);
         viewSymbolFacade.create(viewSymbol);
         viewSymbol.setName(multiviewSymbol.getCaption()+"-"+viewSymbol.getId());
+        viewSymbolFacade.update(viewSymbol);
 
-        // View Symbol作成
+        // View Symbolに注釈
+        ViewSymbolHasMeaning viewSymbolHasMeaning;
+        ViewSymbolHasMeaningId viewSymbolHasMeaningId;
+        for(Meaning meaning : selectedMeanList) {
+            viewSymbolHasMeaning = new ViewSymbolHasMeaning();
+            viewSymbolHasMeaningId = new ViewSymbolHasMeaningId();
+            viewSymbolHasMeaningId.setMeaningId(meaning.getId());
+            viewSymbolHasMeaningId.setViewSymbolId(viewSymbol.getId());
+            viewSymbolHasMeaning.setId(viewSymbolHasMeaningId);
+            viewSymbolHasMeaningFacade.create(viewSymbolHasMeaning);
+        }
+
+        // View Symbol画像作成
         imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"),
                 "/vs/"+multiviewSymbol.getCaption()+"/s/", multiviewSymbol.getCaption()+"-"+Integer.toString(image.getId())+"_s", 200);
         imgProc(getImg("/image/"+Integer.toString(image.getId())+".jpg"),

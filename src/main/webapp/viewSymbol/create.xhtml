@@ -9,6 +9,8 @@
 
 	<ui:define name="head">
 		<h:outputStylesheet library="css" name="c_vs.css"/>
+		<h:outputScript library="js" name="jquery.grid-a-licious.js"/>
+		<h:outputScript library="js" name="oc.js"/>
 	</ui:define>
 
 	<f:metadata>
@@ -28,7 +30,6 @@
 							</td>
 							<td colspan="6" style="width: 800px;">
 								<div class="form-group">
-									<label>画像を選択してください</label>
 									<h:inputFile id="file" value="#{viewSymbolRegisterBean.file}">
 										<f:validator validatorId="fileUploadValidator"/>
 									</h:inputFile>
@@ -53,41 +54,41 @@
 							<td>
 								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedObjectId}" styleClass="form-control">
 									<f:selectItems value="#{viewSymbolRegisterBean.objects}"/>
-									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.object}" render="select-word"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.object}" render="icon vs-list"/>
 								</h:selectOneMenu>
 							</td>
 							<td>
 								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedTimeId}" styleClass="form-control">
 									<f:selectItems value="#{viewSymbolRegisterBean.times}"/>
-									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.time}" render="select-word"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.time}" render="icon vs-list"/>
 								</h:selectOneMenu>
 							</td>
 							<td>
 								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedPlaceId}" styleClass="form-control">
 									<f:selectItems value="#{viewSymbolRegisterBean.places}"/>
-									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.place}" render="select-word"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.place}" render="icon vs-list"/>
 								</h:selectOneMenu>
 							</td>
 							<td>
 								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedSituId}" styleClass="form-control">
 									<f:selectItems value="#{viewSymbolRegisterBean.situations}"/>
-									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.situation}" render="select-word"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.situation}" render="icon vs-list"/>
 								</h:selectOneMenu>
 							</td>
 							<td>
 								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedIndId}" styleClass="form-control">
 									<f:selectItems value="#{viewSymbolRegisterBean.individuals}"/>
-									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.individual}" render="select-word"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.individual}" render="icon vs-list"/>
 								</h:selectOneMenu>
 							</td>
 							<td>
 								<h:selectOneMenu value="#{viewSymbolRegisterBean.selectedCollId}" styleClass="form-control">
 									<f:selectItems value="#{viewSymbolRegisterBean.collectives}"/>
-									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.collective}" render="select-word"/>
+									<f:ajax event="change" execute="@this" listener="#{viewSymbolRegisterBean.collective}" render="icon vs-list"/>
 								</h:selectOneMenu>
 							</td>
 						</tr>
-						<tr>
+						<tr jsf:id="icon">
 							<td colspan="1" class="item">
 								<h6>Clarifierアイコン</h6>
 							</td>
@@ -135,7 +136,25 @@
 						</tr>
 					</table>
 
-
+					<div jsf:id="vs-list">
+					<ui:fragment rendered="#{viewSymbolRegisterBean.vsList.size() != 0}">
+						<h4 class="lines-on-sides">一覧</h4>
+						<ui:fragment rendered="#{viewSymbolRegisterBean.vsList.size() != 0}">
+							<div id="pic-list">
+								<ul>
+									<ui:repeat value="#{viewSymbolRegisterBean.vsList}" var="_vs">
+										<li class="item">
+											<h:graphicImage url="../resources/vs/#{_vs.multiviewSymbol.caption}/m/#{_vs.multiviewSymbol.caption}-#{_vs.image.id}_m.jpg"/>
+										</li>
+									</ui:repeat>
+								</ul>
+								<!-- 部分更新後jsが効かなくなるので再度読み込む -->
+								<h:outputScript library="js" name="jquery.grid-a-licious.js"/>
+								<h:outputScript library="js" name="oc.js"/>
+							</div>
+						</ui:fragment>
+					</ui:fragment>
+					</div>
 				</div>
 			</h:form>
 		</div>

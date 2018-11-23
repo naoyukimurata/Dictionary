@@ -39,6 +39,10 @@ public class MultiviewSymbolFacade {
         }
     }
 
+    public void remove(MultiviewSymbol multiviewSymbol) {
+        em.remove(em.merge(multiviewSymbol));
+    }
+
     public MultiviewSymbol findOne(int msId) {
         String jpql = "SELECT ms FROM MultiviewSymbol ms WHERE ms.id = :msId";
         TypedQuery<MultiviewSymbol> query = em.createQuery(jpql, MultiviewSymbol.class);

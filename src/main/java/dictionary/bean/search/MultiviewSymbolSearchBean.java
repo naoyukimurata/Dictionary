@@ -7,6 +7,8 @@ import dictionary.facade.MultiviewSymbolFacade;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,15 +30,23 @@ public class MultiviewSymbolSearchBean extends SubFunction implements Serializab
     }
 
     public Object[] getPictures(MultiviewSymbol multiviewSymbol) {
-        System.out.println(multiviewSymbol.getViewSymbols().size());
         List<ViewSymbol> viewSymbolList = new ArrayList<>();
         if(multiviewSymbol.getViewSymbols() != null) {
             for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols()) {
-                System.out.println(viewSymbol.getName());
-
                 viewSymbolList.add(viewSymbol);
             }
         }
         return viewSymbolList.toArray();
+    }
+
+    public void delete(ViewSymbol viewSymbol) {
+        System.out.println(viewSymbol.getName());
+        deleteViewSymbol(viewSymbol);
+
+        FacesMessage fm2 = new FacesMessage("View Symbolを削除しました");
+        FacesContext fc2 = FacesContext.getCurrentInstance();
+        fc2.addMessage(null, fm2);
+
+        init();
     }
 }
