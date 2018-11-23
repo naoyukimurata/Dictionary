@@ -339,8 +339,8 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         return img;
     }
 
+    // View Symbol画像作成
     private void imgProc(BufferedImage bufImg, String outputPath, String name, int size) {
-
         int w = bufImg.getWidth();
         int h = bufImg.getHeight();
 
@@ -412,28 +412,19 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
             }
         }
 
-        System.out.println((int) (size*0.8));
-
         // アイコン追加
         int i = 1;
         int xStart = (size/selectedMeanList.size())/2-((int) (size/6*0.4));
-        System.out.println("xstart:"+xStart);
         for(Meaning meaning : selectedMeanList) {
             if(i != 1) xStart += size/selectedMeanList.size();
-            System.out.println("icon-size:"+height/6*0.9);
-            squBufImg = addIcon(xStart, (int) (height/6), squBufImg, getImg("/c_icon/" + meaning.getClarifier().getTypeName() + ".jpg"));
+            squBufImg = addIcon(xStart, (int) (size/6*0.8), squBufImg, getImg("/c_icon/" + meaning.getClarifier().getTypeName() + ".jpg"));
             i++;
         }
-
-        //cPicTitle += "_" + tagIcon.getName();
-        //tagIconList.add(tagIcon);
-        //squBufImg = addIcon(510, squBufImg, getImg("/tag_icon/how/" + tagIcon.getName() + ".jpg"));
 
         // 一度byte配列変換
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BufferedOutputStream os = new BufferedOutputStream(baos);
         try {
-            //ImageIO.write(squBufImg,"jpg",os);
             ImageIO.write(squBufImg,"jpg",os);
             baos.flush();
             baos.close();
@@ -460,19 +451,12 @@ public class ViewSymbolRegisterBean extends SubFunction implements Serializable 
         form.filter(icon, dst);
 
         int rgb = 0, xx = 0, yy = 0;
-        System.out.println("height:"+squBufImg.getHeight());
-        System.out.println(squBufImg.getHeight()/6);
-        System.out.println(iconSize*0.1);
 
-        System.out.println("(int) (squBufImg.getHeight() - squBufImg.getHeight()/6*0.9):"+(int) (squBufImg.getHeight() - squBufImg.getHeight()/6*0.9));
-        System.out.println("iconSize-squBufImg.getHeight()/6*0.1:"+(int)(squBufImg.getHeight()-squBufImg.getHeight()/6*0.9));
-        for(int y = (int) (squBufImg.getHeight() - squBufImg.getHeight()/6*0.9); y < squBufImg.getHeight()-squBufImg.getHeight()/6*0.9-1 + iconSize ; y++) {
-            System.out.println(y);
+        // 所定の位置にアイコン上書き
+        int yStart = squBufImg.getHeight() - iconSize/8*9;
+        for(int y = yStart ; y < yStart +iconSize ; y++) {
             xx = 0;
             for(int x = xStart ; x < xStart+iconSize; x++) {
-                //System.out.println(x);
-                //System.out.println("xx:"+xx);
-                //System.out.println("yy:"+yy);
                 rgb = dst.getRGB(xx,yy);
                 squBufImg.setRGB(x,y,rgb);
                 xx++;
