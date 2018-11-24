@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @XmlRootElement
 public class RestMultiviewSymbol {
@@ -15,18 +17,25 @@ public class RestMultiviewSymbol {
     private Integer id;
     @Getter @Setter
     private String caption;
-    //@Getter @Setter
-    //private String[][] clarifierTypes = new String[][]
     @Getter @Setter
-    private String url;
+    private Map<String, String> clarifierTypes = new HashMap<>();
+    @Getter @Setter
+    private int num;
+    @Getter @Setter
+    private int total_viewSymbols;
+    @Getter @Setter
+    private String size = "middle";
+    @Getter @Setter
+    private List<RestViewSymbol> viewSymbols;
 
     public RestMultiviewSymbol() {
     }
 
-    public RestMultiviewSymbol(MultiviewSymbol multiviewSymbol, String path, List<Clarifier> clarifierTypes) {
-        id = multiviewSymbol.getId();
-        caption = multiviewSymbol.getCaption();
-        //this.clarifierTypes.add(clarifierTypes.get(0).getTypeName());
-        url = path + "/" + caption +  ".jpg";
+    public RestMultiviewSymbol(MultiviewSymbol multiviewSymbol, String imageSize, Map<String, String> clarifierTypes, List<RestViewSymbol> viewSymbols) {
+        this.id = multiviewSymbol.getId();
+        this.caption = multiviewSymbol.getCaption();
+        this.clarifierTypes = clarifierTypes;
+        this.viewSymbols = viewSymbols;
+        this.size = imageSize==null ? "middle" : imageSize;
     }
 }

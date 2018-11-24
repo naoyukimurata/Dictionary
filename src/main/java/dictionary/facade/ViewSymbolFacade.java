@@ -1,6 +1,6 @@
 package dictionary.facade;
 
-import dictionary.entity.SymbolGraphic;
+import dictionary.entity.ViewSymbol;
 import dictionary.entity.ViewSymbol;
 
 import javax.ejb.Stateless;
@@ -26,10 +26,19 @@ public class ViewSymbolFacade {
         em.remove(em.merge(viewSymbol));
     }
 
-    public List<SymbolGraphic> findAll() {
-        String jpql = "SELECT m FROM SymbolGraphic m";
-        TypedQuery<SymbolGraphic> query = em.createQuery(jpql, SymbolGraphic.class);
-        List<SymbolGraphic> meaningList = query.getResultList();
+    public ViewSymbol findOne(int id) {
+        String jpql = "SELECT vs FROM ViewSymbol vs WHERE vs.id = :vsId";
+        TypedQuery<ViewSymbol> query = em.createQuery(jpql, ViewSymbol.class);
+        query.setParameter("vsId", id);
+        ViewSymbol viewSymbol = query.getSingleResult();
+
+        return viewSymbol;
+    }
+    
+    public List<ViewSymbol> findAll() {
+        String jpql = "SELECT m FROM ViewSymbol m";
+        TypedQuery<ViewSymbol> query = em.createQuery(jpql, ViewSymbol.class);
+        List<ViewSymbol> meaningList = query.getResultList();
 
         return meaningList;
     }
