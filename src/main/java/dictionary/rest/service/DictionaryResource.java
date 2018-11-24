@@ -103,7 +103,9 @@ public class DictionaryResource implements Serializable {
         List<RestViewSymbol> restViewSymbolList = new ArrayList<>();
         int i;
         for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols()) {
-            if(viewSymbol.getViewSymbolHasMeanings().size() == clarifierTypes.size()) {
+            if(0 == clarifierTypes.size()) {
+                restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize));
+            } else if(viewSymbol.getViewSymbolHasMeanings().size() == clarifierTypes.size()) {
                 i = 0;
                 for (Map.Entry<String, String> entry : clarifierTypes.entrySet()) {
                     for (ViewSymbolHasMeaning vshm : viewSymbol.getViewSymbolHasMeanings()) {
@@ -121,7 +123,7 @@ public class DictionaryResource implements Serializable {
 
                 System.out.println("i:" + i);
                 // 追加
-                if (i == viewSymbol.getViewSymbolHasMeanings().size())
+                if(i == viewSymbol.getViewSymbolHasMeanings().size())
                     restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize));
             }
         }
