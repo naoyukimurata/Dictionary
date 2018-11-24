@@ -14,8 +14,6 @@ import java.util.Map;
 @XmlRootElement
 public class RestMultiviewSymbol {
     @Getter @Setter
-    private Integer id;
-    @Getter @Setter
     private String caption;
     @Getter @Setter
     private Map<String, String> clarifierTypes = new HashMap<>();
@@ -32,10 +30,11 @@ public class RestMultiviewSymbol {
     }
 
     public RestMultiviewSymbol(MultiviewSymbol multiviewSymbol, String imageSize, Map<String, String> clarifierTypes, List<RestViewSymbol> viewSymbols) {
-        this.id = multiviewSymbol.getId();
         this.caption = multiviewSymbol.getCaption();
         this.clarifierTypes = clarifierTypes;
         this.viewSymbols = viewSymbols;
         this.size = imageSize==null ? "middle" : imageSize;
+        this.num = viewSymbols.size();
+        this.total_viewSymbols = multiviewSymbol.getViewSymbols().size();
     }
 }

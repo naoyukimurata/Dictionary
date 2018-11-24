@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                template="/resources/template/apiPageTemplate.xhtml">
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="base42.min.css" />
+        <h:outputStylesheet library="css" name="api.css" />
+        <h:outputStylesheet library="js" name="base95.min.js" />
+        <h:outputStylesheet library="js" name="highlight.js" />
+    </ui:define>
+
+    <ui:define name="main">
+        <div id="wrapper">
+            <div id="header"><div id="header_inner">
+                <div class="pure-menu pure-menu-horizontal pure-menu-open">
+                    <ul>
+                        <li class="pure-dropdown hide-xs hide-sm hide-md">
+                            <a href="/ja/editors_choice/">写真の検索 <i class="arrow"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <a id="logo" href="/" class="hover_opacity"></a>
+
+                <form class="media_search header_search" action="/ja/photos/" method="get"><div><div class="dd_box" data-left="1"><span class="image_type" style="margin-right:5px">画像</span><i class="arrow"></i></div><div class="pure-form bubble sw"><div class="select_image_type"><span data-type="">画像</span><span data-type="photo" style="margin-left:10px">写真</span><span data-type="vector" style="margin-left:10px">ベクター画像</span><span data-type="illustration" style="margin-left:10px">イラスト</span><span data-type="video">動画</span></div><hr/><a href="/blog/posts/id-46/" target="_blank">検索オプション →</a></div><input type="submit" value=" "/><span><input type="text" name="q" value="" placeholder="画像・ベクター画像・動画を検索"/></span><div style="position:absolute;left:-9999px"><input type="text" name="hp" autocomplete="off" tabindex="-1" value=""/><input type="hidden" name="image_type" value="all"/><input type="hidden" name="order" value=""/><input type="hidden" name="cat" value=""/><input type="checkbox" name="orientation" value="horizontal"/><input type="checkbox" name="orientation" value="vertical"/><input type="hidden" name="min_width" value=""/><input type="hidden" name="min_height" value=""/><input type="checkbox" name="colors" value="transparent"/><input type="checkbox" name="colors" value="grayscale"/><input type="checkbox" name="colors" value="red"/><input type="checkbox" name="colors" value="orange"/><input type="checkbox" name="colors" value="yellow"/><input type="checkbox" name="colors" value="green"/><input type="checkbox" name="colors" value="turquoise"/><input type="checkbox" name="colors" value="blue"/><input type="checkbox" name="colors" value="lilac"/><input type="checkbox" name="colors" value="pink"/><input type="checkbox" name="colors" value="white"/><input type="checkbox" name="colors" value="gray"/><input type="checkbox" name="colors" value="black"/><input type="checkbox" name="colors" value="brown"/><input type="checkbox" name="animation" value="1"/><input type="checkbox" name="slow_motion" value="1"/><input type="checkbox" name="time_lapse" value="1"/><input type="checkbox" name="resolution_4k" value="1"/><input type="checkbox" name="resolution_hd" value="1"/></div></div></form>
+            </div></div></div>
+        <div id="content" class="clearfix">
+            <div class="pure-g hover_links" style="margin:50px auto 0;padding:0 20px;max-width:1040px;line-height:1.5;font-size:15px">
+                <div class="pure-u-1 pure-u-md-1-4 hide-xs hide-sm">
+                    <div id="sidebar_menu" style="margin:0 0 50px;padding-right:20px">
+                        <h2 style="margin-top:0">Contents</h2>
+                        <p><a href="#api_hotlinking">Hotlinking</a></p>
+                        <!--p><a href="#api_error_handling">Error handling</a></p-->
+                        <p><a href="#api_search_images">Search images</a></p>
+                        <p><a href="#api_javascript_example">JavaScript example</a></p>
+                    </div>
+                </div>
+                <div class="pure-u-1 pure-u-md-3-4">
+                    <h1 style="margin-top:0">Multi-vew Symbol Dictionary API</h1>
+                    <p>Multi-view Symbol Dictionary API ドキュメントへようこそ。</p>
+                    <p>Multi-View Symbolとは、会津大学”活性知識学講座”が開発する「物事について多視点的な説明をする、多種多様なユーザが理解可能な記号の集合」です。<h:link outcome="/apiDocs/index.xhtml" value="詳細"/></p>
+                    <p>Multi-view Symbol Dictionary APIはMulti-view Symbolを提供するRESTfulなインターフェイスです。APIはJSON形式にエンコードされたオブジェクトを返します。</p>
+
+                    <h2 id="api_search_images">Search Images</h2>
+                    <div class="endpoint"><b>GET</b>https://{host_name}/api/multiview_symbol/{caption}/</div>
+
+                    <h3>Parameters</h3>
+                    <table class="api_properties params">
+                        <tr>
+                            <th>caption <span style="color:#d95353">(必須)</span></th>
+                            <td>str</td>
+                            <td id="api_key">
+                                取得するMulti-view Symbolのセットを指定する
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>size</th>
+                            <td>str</td>
+                            <td>
+                                View Symbolの画像サイズ
+                                <br/><span style="color:#fff; padding:1px; background: #3A973A">Accepted values</span> &quot;small&quot;, &quot;middle&quot;, &quot;large&quot;
+                                <br/><span style="color:#fff; padding:1px; background: #3A3A97">Default</span> middle
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>num</th>
+                            <td>int</td>
+                            <td>
+                                取得するView Symbolの件数。最大件数以上の数を指定した場合最大件数取得。
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> 1~最大件数
+                                <br/><span style="color:#fff; padding:1px; background: #3A3A97">Default</span> 最大件数
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>object</th>
+                            <td>str</td>
+                            <td>
+                                Clarifier “Object” が付加されたView Symbolを取得対象とする
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> &quot;all&quot;, &quot;natural&quot;, &quot;artificial&quot;
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>time</th>
+                            <td>str</td>
+                            <td>
+                                Clarifier “Time” が付加されたView Symbolを取得対象とする
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> &quot;all&quot;, &quot;time_of_day&quot;, &quot;day&quot;, &quot;week&quot;, &quot;month&quot;, &quot;year&quot;, &quot;season&quot;
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>place</th>
+                            <td>str</td>
+                            <td>
+                                Clarifier “Place” が付加されたView Symbolを取得対象とする
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> &quot;all&quot;, &quot;position&quot;, &quot;space&quot;
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>situation</th>
+                            <td>int</td>
+                            <td>
+                                Clarifier “Situation” が付加されたView Symbolを取得対象とする
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> &quot;all&quot;, &quot;activity&quot;, &quot;status&quot;, &quot;scene&quot;
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>individual</th>
+                            <td>int</td>
+                            <td>
+                                Clarifier “Individual” が付加されたView Symbolを取得対象とする
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> &quot;all&quot;, &quot;one&quot;, &quot;single&quot;
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>collective</th>
+                            <td>str</td>
+                            <td>
+                                Clarifier “Collective” が付加されたView Symbolを取得対象とする
+                                <br/><span style="color:#fff; padding:2px; background: #3A973A">Accepted values</span> &quot;all&quot;, &quot;pair&quot;, &quot;many&quot;
+                            </td>
+                        </tr>
+                    </table>
+
+                    <h3 id="image_search_response">Example</h3>
+                    <p>
+                        Captionが”beautiful”のMulti-view Symbolセットで、Clarifierに最低でもObject(all)とSituation(statusのみ)を含むView Symbolを最大で２０件取得する
+                    </p>
+                    <div class="example_url">https://{host名}/api/multiview_symbol?caption=beautiful&amp;num=20&amp;object=all&amp;situation=status</div>
+                    <p>レスポンス例:</p>
+                    <pre class="prettyprint rainbow" data-language="javascript">{
+"caption": "beautiful",
+"clarifierTypes": {
+    "object": "all",
+    "situation": "status"
+},
+"total_viewSymbols": 28,
+"num": 20,
+"size": "middle",
+"viewSymbols": [
+    {
+        "id": 1,
+        "name": "beautiful-1",
+        "imageUrl": "photo",
+        "tags": "blossom, bloom, flower",
+        "previewURL": "https://{host名}/beautiful/m/beautiful-1_m.jpg"
+        "clarifierTypes": {
+            "object": "natural",
+            "situation": "status",
+        },
+    },
+    {
+        "id": 3,
+        ...
+    },
+    ...
+]
+}</pre>
+                    <table class="api_properties">
+                        <tr><th>Response key</th><th>Description</th></tr>
+                        <tr><td>caption</td><td>Multi-view Symbolのキャプション</td></tr>
+                        <tr><td>clarifierTypes</td><td>検索対象のClarifier</td></tr>
+                        <tr><td>total_viewSymbols</td><td>Multi-view Symbolが保持するView Symbolの数</td></tr>
+                        <tr><td>num</td><td>取得するView Symbolの数</td></tr>
+                        <tr><td>size</td><td>View Symbolの画像サイズ</td></tr>
+                        <tr><td>viewSymbols</td><td>View Symbolのリスト</td></tr>
+                        <tr><td>id</td><td>View Symbolのunique identifier</td></tr>
+                        <tr><td>name</td><td>View Symbolの名前</td></tr>
+                        <tr><td>imageURL</td><td>View Symbol画像URL</td></tr>
+                        <tr><td>clarifierTypes</td><td>View Symbolに注釈されているClarifier</td></tr>
+                    </table>
+
+
+                    <h2 id="api_javascript_example">JavaScript Example</h2>
+                    <pre class="prettyprint">
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
