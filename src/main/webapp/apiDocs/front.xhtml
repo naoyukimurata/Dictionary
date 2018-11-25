@@ -10,8 +10,8 @@
     <ui:define name="head">
         <h:outputStylesheet library="css" name="base42.min.css" />
         <h:outputStylesheet library="css" name="api.css" />
-        <h:outputStylesheet library="js" name="base95.min.js" />
-        <h:outputStylesheet library="js" name="highlight.js" />
+        <h:outputStylesheet library="css" name="front.css" />
+        <h:outputScript library="js" name="front.js" />
     </ui:define>
 
     <ui:define name="main">
@@ -33,16 +33,16 @@
                 <div class="pure-u-1 pure-u-md-1-4 hide-xs hide-sm">
                     <div id="sidebar_menu" style="margin:0 0 50px;padding-right:20px">
                         <h2 style="margin-top:0">Contents</h2>
-                        <p><a href="#test1">test1</a></p>
+                        <p><a href="#leftClick">左クリック表示サンプル</a></p>
                         <p><a href="#test2">test2</a></p>
                     </div>
                 </div>
                 <div class="pure-u-1 pure-u-md-3-4">
                     <h1 style="margin-top:0">Multi-vew Symbol Dictionary CSS and JavaScript</h1>
 
-                    <h2 id="test1">test1</h2>
-                        
-                    <h2 id="test2">test2</h2>
+                    <h2 id="leftClick">左クリック表示サンプル</h2>
+                    <button type="button" class="pop">左クリックしてください</button>
+                    <div class="popup" id="scroll"></div>
                   </div>
             </div>
         </div>

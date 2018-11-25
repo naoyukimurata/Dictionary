@@ -42,7 +42,7 @@ public class RestViewSymbol {
         else if(imageSize.equals("small")) size = "s";
         else size = "l";
 
-        this.imageUrl = "http;//~~/" + viewSymbol.getMultiviewSymbol().getCaption()
+        this.imageUrl = "http://localhost:8080/Dictionary/resources/vs/" + viewSymbol.getMultiviewSymbol().getCaption()
                 +"/"+size+"/"+viewSymbol.getName()+"_"+size+".jpg";
     }
 }

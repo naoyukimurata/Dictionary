@@ -1,0 +1,29 @@
+.popup {
+    z-index:10;
+    width: 30%;
+    position:fixed;
+    display: none;
+    box-shadow: 2px 2px 4px #5e5e5e;
+    background: white;
+}
+
+#scroll {
+    height:50%;
+    overflow:auto;
+}
+.cell {
+    padding: 5px 5px 5px 5px;
+    width: 200px;
+    height: 200px;
+    text-align: center;
+    border: 1px solid lightgray;
+    margin-top: 10px;
+    margin-left: 10px;
+    float: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cell img {
+    width: 180px;
+}
