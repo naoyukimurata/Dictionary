@@ -1,13 +1,12 @@
 .popup {
     z-index:10;
-    width: 30%;
+    width: 40%;
     position:fixed;
-    display: none;
     box-shadow: 2px 2px 4px #5e5e5e;
     background: white;
 }
 
-#scroll {
+.scroll {
     height:50%;
     overflow:auto;
 }
