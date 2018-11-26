@@ -79,8 +79,12 @@ function popupResize() {
     var direction;
     var w = window.innerWidth;
     var h = window.innerHeight;
-    var contentsW = contents.outerWidth(true)-parseInt($(contents).css('margin-top'), 10);
-    var contentsH = contents.outerHeight(true)-parseInt($(contents).css('margin-top'), 10);
+    var contentsW = contents.outerWidth(true);
+    var contentsH = contents.outerHeight(true);
+    var mU = parseInt($(contents).css('margin-top'), 10);
+    var mD = parseInt($(contents).css('margin-bottom'), 10);
+    var mL = parseInt($(contents).css('margin-left'), 10);
+    var mR = parseInt($(contents).css('margin-right'), 10);
 
     var up = contents.offset().top;
     var down = h-up-contents.outerHeight(true);
@@ -97,12 +101,12 @@ function popupResize() {
         $(".popup").css({"left": left + "px"});
         $(".popup").css({"top": 20 + "px"});
         $(".popup").width(w-left-20);
-        $(".popup").height(up-contentsH);
+        $(".popup").height(up-contentsH+mU);
     }
     /* 右 */
     else if(direction == 1) {
         if(up > down) {
-            $(".popup").css({"left": left+contentsW + "px"});
+            $(".popup").css({"left": left+contentsW-mR + "px"});
             $(".popup").css({"top": 20 + "px"});
             $(".popup").width(w-left-contentsW-30);
             $(".popup").height(h-down-20);
@@ -116,9 +120,9 @@ function popupResize() {
     /* 下 */
     else if(direction == 2) {
         $(".popup").css({"left": left + "px"});
-        $(".popup").css({"top": up+contentsH + "px"});
+        $(".popup").css({"top": up+contentsH-mU-mD + "px"});
         $(".popup").width(right+contentsW-20);
-        $(".popup").height(down-20);
+        $(".popup").height(down-20+mD+mU);
     }
     /* 左 */
     else {
@@ -126,7 +130,7 @@ function popupResize() {
             $(".popup").css({"left": 20 + "px"});
             $(".popup").css({"top": 20 + "px"});
             $(".popup").width(w-right-contentsW-30);
-            $(".popup").height(h-down-20);
+            $(".popup").height(h-down-mD-20);
         } else {
             $(".popup").css({"left": 20 + "px"});
             $(".popup").css({"top": up + "px"});

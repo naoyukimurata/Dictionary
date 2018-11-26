@@ -1,12 +1,10 @@
 package dictionary.rest.service;
 
-import dictionary.entity.Clarifier;
 import dictionary.entity.MultiviewSymbol;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -320,7 +320,7 @@ input,textarea,select{border-radius:2px !important;resize:none}
 .button-red{color:#fff !important;background-color:#d95353! important}
 .button-md{padding:8px 17px;font-size:13px}
 .button-sm{padding:6px 12px;font-size:12px;position:relative;top:-2px}
-.pure-menu{position:absolute;right:0;top:0;width:auto !important;background:#fafafa !important;z-index:999;height:52px}
+.pure-menu{position:absolute;top:0;width:auto !important;background:#fafafa !important;z-index:999;height:52px}
 .pure-menu li ul{border:0 !important;border-top:1px solid #ddd !important;border-left:1px solid #eee !important;box-shadow:1px 2px 3px rgba(0,0,0,.3) !important}
 .pure-menu li a{padding:13px 20px !important;color:#373737;text-shadow:0 1px 1px #fff}
 .pure-menu li li a{padding:6px 20px !important}

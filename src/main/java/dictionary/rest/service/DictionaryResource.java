@@ -1,7 +1,5 @@
 package dictionary.rest.service;
 
-
-import dictionary.entity.Clarifier;
 import dictionary.entity.MultiviewSymbol;
 import dictionary.entity.ViewSymbol;
 import dictionary.entity.ViewSymbolHasMeaning;
