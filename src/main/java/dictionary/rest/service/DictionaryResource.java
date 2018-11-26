@@ -105,25 +105,24 @@ public class DictionaryResource implements Serializable {
         for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols()) {
             if(0 == clarifierTypes.size()) {
                 restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize));
-            } else if(viewSymbol.getViewSymbolHasMeanings().size() == clarifierTypes.size()) {
+            } else if(viewSymbol.getViewSymbolHasMeanings().size() >= clarifierTypes.size()) {
                 i = 0;
                 for (Map.Entry<String, String> entry : clarifierTypes.entrySet()) {
                     for (ViewSymbolHasMeaning vshm : viewSymbol.getViewSymbolHasMeanings()) {
-                        System.out.println("Key:" + entry.getKey() + " Value:" + entry.getValue());
-                        System.out.println("Clarifier:" + vshm.getMeaning().getClarifier().getTypeName() + " Meaning:" + vshm.getMeaning().getWord());
-                        if (entry.getKey().equals(vshm.getMeaning().getClarifier().getTypeName())) {
-                            if (entry.getValue().equals(vshm.getMeaning().getWord()) || entry.getValue().equals("all")) {
+                        if(entry.getKey().equals(vshm.getMeaning().getClarifier().getTypeName())) {
+                            if(entry.getValue().equals(vshm.getMeaning().getWord()) || entry.getValue().equals("all")) {
+                                //System.out.println("Key:" + entry.getKey() + " Value:" + entry.getValue());
+                                //System.out.println("Clarifier:" + vshm.getMeaning().getClarifier().getTypeName() + " Meaning:" + vshm.getMeaning().getWord());
                                 i++;
                                 break;
                             }
                         }
-                        vshm.getMeaning().getWord();
                     }
                 }
+                //System.out.println("i:" + i);
 
-                System.out.println("i:" + i);
                 // 追加
-                if(i == viewSymbol.getViewSymbolHasMeanings().size())
+                if(i == clarifierTypes.size())
                     restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize));
             }
         }

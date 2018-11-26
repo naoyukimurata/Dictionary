@@ -2,10 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://java.sun.com/jsf/html"
-                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 template="/resources/template/apiPageTemplate.xhtml">
     <ui:define name="head">
         <h:outputStylesheet library="css" name="base42.min.css" />
@@ -15,26 +12,13 @@
     </ui:define>
 
     <ui:define name="main">
-        <div id="wrapper">
-            <div id="header"><div id="header_inner">
-                <div class="pure-menu pure-menu-horizontal pure-menu-open">
-                    <ul>
-                        <li class="pure-dropdown hide-xs hide-sm hide-md">
-                            <a href="/ja/editors_choice/">写真の検索 <i class="arrow"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <a id="logo" href="/" class="hover_opacity"></a>
-
-                <form class="media_search header_search" action="/ja/photos/" method="get"><div><div class="dd_box" data-left="1"><span class="image_type" style="margin-right:5px">画像</span><i class="arrow"></i></div><div class="pure-form bubble sw"><div class="select_image_type"><span data-type="">画像</span><span data-type="photo" style="margin-left:10px">写真</span><span data-type="vector" style="margin-left:10px">ベクター画像</span><span data-type="illustration" style="margin-left:10px">イラスト</span><span data-type="video">動画</span></div><hr/><a href="/blog/posts/id-46/" target="_blank">検索オプション →</a></div><input type="submit" value=" "/><span><input type="text" name="q" value="" placeholder="画像・ベクター画像・動画を検索"/></span><div style="position:absolute;left:-9999px"><input type="text" name="hp" autocomplete="off" tabindex="-1" value=""/><input type="hidden" name="image_type" value="all"/><input type="hidden" name="order" value=""/><input type="hidden" name="cat" value=""/><input type="checkbox" name="orientation" value="horizontal"/><input type="checkbox" name="orientation" value="vertical"/><input type="hidden" name="min_width" value=""/><input type="hidden" name="min_height" value=""/><input type="checkbox" name="colors" value="transparent"/><input type="checkbox" name="colors" value="grayscale"/><input type="checkbox" name="colors" value="red"/><input type="checkbox" name="colors" value="orange"/><input type="checkbox" name="colors" value="yellow"/><input type="checkbox" name="colors" value="green"/><input type="checkbox" name="colors" value="turquoise"/><input type="checkbox" name="colors" value="blue"/><input type="checkbox" name="colors" value="lilac"/><input type="checkbox" name="colors" value="pink"/><input type="checkbox" name="colors" value="white"/><input type="checkbox" name="colors" value="gray"/><input type="checkbox" name="colors" value="black"/><input type="checkbox" name="colors" value="brown"/><input type="checkbox" name="animation" value="1"/><input type="checkbox" name="slow_motion" value="1"/><input type="checkbox" name="time_lapse" value="1"/><input type="checkbox" name="resolution_4k" value="1"/><input type="checkbox" name="resolution_hd" value="1"/></div></div></form>
-            </div></div></div>
         <div id="content" class="clearfix">
             <div class="pure-g hover_links" style="margin:50px auto 0;padding:0 20px;max-width:1040px;line-height:1.5;font-size:15px">
                 <div class="pure-u-1 pure-u-md-1-4 hide-xs hide-sm">
                     <div id="sidebar_menu" style="margin:0 0 50px;padding-right:20px">
                         <h2 style="margin-top:0">Contents</h2>
                         <p><a href="#leftClick">左クリック表示サンプル</a></p>
-                        <p><a href="#test2">セレクトボックス右クリック表示サンプル</a></p>
+                        <p><a href="#selectRightClick">セレクトボックス右クリック表示サンプル</a></p>
                     </div>
                 </div>
                 <div class="pure-u-1 pure-u-md-3-4">
@@ -43,12 +27,13 @@
                     <p>以下は利用例です。</p>
 
                     <h2 id="leftClick">左クリック表示サンプル</h2>
-                    <button type="button" class="pop" id="test1">左クリックしてください</button>
+                    <button type="button" class="pop" id="test1" name="beautiful?object=natural&amp;situation=status">左クリックしてください</button>
                     <button type="button" class="pop" id="test2">左クリックしてください</button>
+                    <button type="button" class="pop" id="test3">左クリックしてください</button>
 
-                    <h2 id="listRightClick">右クリック表示サンプル</h2>
+                    <h2 id="selectRightClick">右クリック表示サンプル</h2>
                     <select name="blood" class="popupR" id="sample">
-                        <option value="sample1">sample1:右クリックしてください</option>
+                        <option value="beautiful?object=natural">sample1:右クリックしてください</option>
                         <option value="sample2">sample2:右クリックしてください</option>
                         <option value="sample3">sample3:右クリックしてください</option>
                         <option value="sample4">sample4:右クリックしてください</option>
