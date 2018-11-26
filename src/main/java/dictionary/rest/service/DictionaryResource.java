@@ -35,7 +35,6 @@ public class DictionaryResource implements Serializable {
     ViewSymbolFacade viewSymbolFacade;
 
     public DictionaryResource() {
-        System.out.println("test");
     }
 
     /**
@@ -61,15 +60,12 @@ public class DictionaryResource implements Serializable {
         //String filepath = ctx.getRealPath("resources") +  "/images/";
 
         //System.out.println("size : " + uriInfo.getQueryParameters().size());
-        System.out.println("caption : " + caption);
-        System.out.println("Object : " + object);
-        System.out.println("Time : " + time);
-        System.out.println("Place : " + place);
-        System.out.println("Situation : " + situation);
-        System.out.println("Individual : " + individual);
-        System.out.println("Collective : " + collective);
 
-        MultiviewSymbol multiviewSymbol = multiviewSymbolFacade.findOneByCap(caption);
+        // Multiview Symbol セット
+        MultiviewSymbol multiviewSymbol = new MultiviewSymbol();
+        if(!caption.equals("undefined")) {
+            multiviewSymbol = multiviewSymbolFacade.findOneByCap(caption);
+        }
 
         // ClarifierTypesセット
         Map<String, String> clarifierTypes

@@ -1,6 +1,5 @@
 .popup {
     z-index:10;
-    width: 40%;
     position:fixed;
     box-shadow: 2px 2px 4px #5e5e5e;
     background: white;
@@ -19,6 +18,7 @@
     margin-top: 10px;
     margin-left: 10px;
     float: left;
+    /* 中身上下中央表示 */
     display: flex;
     justify-content: center;
     align-items: center;

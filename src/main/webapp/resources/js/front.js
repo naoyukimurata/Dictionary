@@ -1,18 +1,19 @@
-var id;
-var URL = "http://localhost:8080/Dictionary/api/dictionary/multiview_symbol/";
+var id = null;
+var URL = null;
 
 $(function() {
     // windowサイズ更新時
     $(window).resize(function() {
-        popupResize(id);
+        if(id != null) popupResize();
     });
 
     // 左クリック処理
-    $(".pop").click(function() {
-        var parameter = $(this).attr("name");
+    $('.leftClick').click(function() {
+        var parameter = $(this).attr("parameter");
         if($('.popup').css('display') == 'block') {
             if(id == $(this).attr("id")) {
                 $('.popup').remove();
+                id = null;
             } else {
                 $('.popup').remove();
                 id = $(this).attr("id");
@@ -26,11 +27,12 @@ $(function() {
     });
 
     // 右クリック処理
-    $(".popupR").bind('contextmenu', function() {
-        var parameter = $(this).val();
+    $(".selectRightClick").bind('contextmenu', function() {
+        var parameter = $("#"+$(this).attr("id")+" option:selected").attr("parameter");
         if($('.popup').css('display') == 'block') {
             if(id == $(this).attr("id")) {
                 $('.popup').remove();
+                id = null;
             } else {
                 $('.popup').remove();
                 id = $(this).attr("id");
@@ -45,8 +47,9 @@ $(function() {
         return false;
     });
 
-    $(".popupR").click(function() {
+    $(".selectRightClick").click(function() {
         $(".popup").remove();
+        id = null;
     });
 });
 
@@ -58,27 +61,79 @@ function api(parameter) {
     initURL();
     $("#"+id).after('<div class="popup scroll"></div>');
     $('.popup').empty();
-    URL += parameter;//"?key="+API_KEY+"&q="+encodeURIComponent('red roses');
-    alert(URL);
+    URL += parameter;
     $.getJSON(URL, function(data){
         if(parseInt(data.num) > 0)
             $.each(data.viewSymbols, function(i, viewSymbol){
                 var img = "<div class='cell'><img src="+viewSymbol.imageUrl+"></div>";
                 $(img).appendTo('.popup');
             });
-        else $('<h1>No Hits</h1>').appendTo('.popup');
+        else $('<h1 id="no-hits" class="no-hits">No Hits</h1>').appendTo('.popup');
     });
     popupResize();
 }
 
 // ポップアップリサイズ
 function popupResize() {
-    var pop = $("#"+id);
-    var x = pop.offset().left+pop.outerWidth(true);
-    var y = pop.offset().top;
+    var contents = $("#"+id);
+    var direction;
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var contentsW = contents.outerWidth(true)-parseInt($(contents).css('margin-top'), 10);
+    var contentsH = contents.outerHeight(true)-parseInt($(contents).css('margin-top'), 10);
 
-    $(".popup").css({"left": x+10 + "px"});
-    $(".popup").css({"top": y + "px"});
+    var up = contents.offset().top;
+    var down = h-up-contents.outerHeight(true);
+    var left = contents.offset().left;
+    var right = w-left-contents.outerWidth(true);
+
+    if(up >= down && up >= right && up >= left) direction = 0;
+    else if(right >= up && right >= left && right >= down) direction = 1;
+    else if(down >= up && down >= right && down >= left) direction = 2;
+    else direction = 3;
+
+    /* 上 */
+    if(direction == 0) {
+        $(".popup").css({"left": left + "px"});
+        $(".popup").css({"top": 20 + "px"});
+        $(".popup").width(w-left-20);
+        $(".popup").height(up-contentsH);
+    }
+    /* 右 */
+    else if(direction == 1) {
+        if(up > down) {
+            $(".popup").css({"left": left+contentsW + "px"});
+            $(".popup").css({"top": 20 + "px"});
+            $(".popup").width(w-left-contentsW-30);
+            $(".popup").height(h-down-20);
+        } else {
+            $(".popup").css({"left": left+contentsW + "px"});
+            $(".popup").css({"top": up + "px"});
+            $(".popup").width(w-left-contentsW-30);
+            $(".popup").height(h-up-20);
+        }
+    }
+    /* 下 */
+    else if(direction == 2) {
+        $(".popup").css({"left": left + "px"});
+        $(".popup").css({"top": up+contentsH + "px"});
+        $(".popup").width(right+contentsW-20);
+        $(".popup").height(down-20);
+    }
+    /* 左 */
+    else {
+        if(up > down) {
+            $(".popup").css({"left": 20 + "px"});
+            $(".popup").css({"top": 20 + "px"});
+            $(".popup").width(w-right-contentsW-30);
+            $(".popup").height(h-down-20);
+        } else {
+            $(".popup").css({"left": 20 + "px"});
+            $(".popup").css({"top": up + "px"});
+            $(".popup").width(w-right-contentsW-30);
+            $(".popup").height(h-up-20);
+        }
+    }
 }
 
 
