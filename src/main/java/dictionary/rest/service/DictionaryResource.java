@@ -7,6 +7,7 @@ import dictionary.facade.*;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
@@ -36,15 +37,15 @@ public class DictionaryResource implements Serializable {
     }
 
     /**
-     * GET http://[ホスト名]/Dictionary/api/symbol/images[/[形容詞名]][?query=[パラメーター]]
+     * GET http://[ホスト名]/Dictionary/api/dictionary/multiview_symbol/{caption}[?query=[パラメーター]]
      *
      * ex)
-     * URI: http://localhost:8080/Dictionary/api/multiview_symbol/{beautiful}/?query=test
+     * URI: http://localhost:8080/Dictionary/api/dictionary/multiview_symbol/beautiful/?query=test
      */
     @GET
     @Path("/multiview_symbol/{caption}/")
     @Produces({"application/json"})
-    public RestMultiviewSymbol retrieveMultiple(@Context UriInfo uriInfo , @Context FacesContext fcx) {
+    public RestMultiviewSymbol retrieveMultiple(@Context UriInfo uriInfo , @Context ServletContext servletContext, @Context HttpServletRequest request) {
         String caption = uriInfo.getPathParameters().getFirst("caption");
         String object = uriInfo.getQueryParameters().getFirst("object");
         String time = uriInfo.getQueryParameters().getFirst("time");
@@ -54,10 +55,8 @@ public class DictionaryResource implements Serializable {
         String collective = uriInfo.getQueryParameters().getFirst("collective");
         String imageSize = uriInfo.getQueryParameters().getFirst("size");
 
-        //ServletContext ctx = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-        //String filepath = ctx.getRealPath("resources") +  "/images/";
-
-        //System.out.println("size : " + uriInfo.getQueryParameters().size());
+        // url
+        String path = "http://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/resources";
 
         // Multiview Symbol セット
         MultiviewSymbol multiviewSymbol = new MultiviewSymbol();
@@ -65,17 +64,25 @@ public class DictionaryResource implements Serializable {
             multiviewSymbol = multiviewSymbolFacade.findOneByCap(caption);
         }
 
+
+        // ClarifierTypesセット
+        Map<String, String> symbolGraphic = new HashMap<>();
+        symbolGraphic.put("imageUrl", path+"/sg/"+caption+".jpg");
+        symbolGraphic.put("name", caption);
+
+
+
         // ClarifierTypesセット
         Map<String, String> clarifierTypes
                 = checkClarifierTypes(object, time, place, situation, individual, collective);
 
         // ViewSymbolリストセット
         List<RestViewSymbol> viewSymbols;
-        viewSymbols = setViewSymbols(clarifierTypes, multiviewSymbol, imageSize);
+        viewSymbols = setViewSymbols(clarifierTypes, multiviewSymbol, imageSize, path);
 
 
         RestMultiviewSymbol resultMultiviewSymbol
-                = new RestMultiviewSymbol(multiviewSymbol, imageSize, clarifierTypes, viewSymbols);
+                = new RestMultiviewSymbol(multiviewSymbol, imageSize, symbolGraphic, clarifierTypes, viewSymbols);
 
         return resultMultiviewSymbol;
     }
@@ -93,12 +100,12 @@ public class DictionaryResource implements Serializable {
         return clarifierTypes;
     }
 
-    public List<RestViewSymbol> setViewSymbols(Map<String, String> clarifierTypes, MultiviewSymbol multiviewSymbol, String imageSize) {
+    public List<RestViewSymbol> setViewSymbols(Map<String, String> clarifierTypes, MultiviewSymbol multiviewSymbol, String imageSize, String path) {
         List<RestViewSymbol> restViewSymbolList = new ArrayList<>();
         int i;
         for(ViewSymbol viewSymbol : multiviewSymbol.getViewSymbols()) {
             if(0 == clarifierTypes.size()) {
-                restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize));
+                restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize ,path));
             } else if(viewSymbol.getViewSymbolHasMeanings().size() >= clarifierTypes.size()) {
                 i = 0;
                 for (Map.Entry<String, String> entry : clarifierTypes.entrySet()) {
@@ -113,11 +120,10 @@ public class DictionaryResource implements Serializable {
                         }
                     }
                 }
-                //System.out.println("i:" + i);
 
                 // 追加
                 if(i == clarifierTypes.size())
-                    restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize));
+                    restViewSymbolList.add(new RestViewSymbol(viewSymbol, imageSize ,path));
             }
         }
 

@@ -14,6 +14,8 @@ public class RestMultiviewSymbol {
     @Getter @Setter
     private String caption;
     @Getter @Setter
+    private Map<String, String>  symbolGraphic = new HashMap<>();
+    @Getter @Setter
     private Map<String, String> clarifierTypes = new HashMap<>();
     @Getter @Setter
     private int num;
@@ -27,8 +29,9 @@ public class RestMultiviewSymbol {
     public RestMultiviewSymbol() {
     }
 
-    public RestMultiviewSymbol(MultiviewSymbol multiviewSymbol, String imageSize, Map<String, String> clarifierTypes, List<RestViewSymbol> viewSymbols) {
+    public RestMultiviewSymbol(MultiviewSymbol multiviewSymbol, String imageSize, Map<String, String> symbolGraphic, Map<String, String> clarifierTypes, List<RestViewSymbol> viewSymbols) {
         this.caption = multiviewSymbol.getCaption();
+        this.symbolGraphic = symbolGraphic;
         this.clarifierTypes = clarifierTypes;
         this.viewSymbols = viewSymbols;
         this.size = imageSize==null ? "middle" : imageSize;
