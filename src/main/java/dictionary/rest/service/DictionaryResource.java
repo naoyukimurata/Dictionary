@@ -7,10 +7,7 @@ import dictionary.facade.*;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,10 +25,6 @@ import java.util.Map;
 public class DictionaryResource implements Serializable {
     @EJB
     MultiviewSymbolFacade multiviewSymbolFacade;
-    @EJB
-    ClarifierFacade clarifierFacade;
-    @EJB
-    ViewSymbolFacade viewSymbolFacade;
 
     public DictionaryResource() {
     }

@@ -6,6 +6,9 @@ $(function() {
     $(window).resize(function() {
         if(id != null) popupResize();
     });
+    $(window).scroll(function(){
+        if(id != null) popupResize();
+    });
 
     // 左クリック処理
     $('.leftClick').click(function() {
@@ -27,6 +30,27 @@ $(function() {
     });
 
     // 右クリック処理
+    $(".rightClick").bind('contextmenu', function() {
+        var parameter = $(this).attr("parameter");
+        if($('.popup').css('display') == 'block') {
+            if(id == $(this).attr("id")) {
+                $('.popup').remove();
+                id = null;
+            } else {
+                $('.popup').remove();
+                id = $(this).attr("id");
+                api(parameter);
+            }
+        }
+        else {
+            id =  $(this).attr("id");
+            api(parameter);
+        }
+
+        return false;
+    });
+
+    // リストボックス右クリック処理
     $(".selectRightClick").bind('contextmenu', function() {
         var parameter = $("#"+$(this).attr("id")+" option:selected").attr("parameter");
         if($('.popup').css('display') == 'block') {
@@ -48,6 +72,10 @@ $(function() {
     });
 
     $(".selectRightClick").click(function() {
+        $(".popup").remove();
+        id = null;
+    });
+    $(".rightClick").click(function() {
         $(".popup").remove();
         id = null;
     });
@@ -73,6 +101,7 @@ function api(parameter) {
     popupResize();
 }
 
+
 // ポップアップリサイズ
 function popupResize() {
     var contents = $("#"+id);
@@ -85,15 +114,18 @@ function popupResize() {
     var mD = parseInt($(contents).css('margin-bottom'), 10);
     var mL = parseInt($(contents).css('margin-left'), 10);
     var mR = parseInt($(contents).css('margin-right'), 10);
-
+    var aH = screen.availHeight;
+    var sT = $(window).scrollTop();
     var up = contents.offset().top;
-    var down = h-up-contents.outerHeight(true);
-    var left = contents.offset().left;
-    var right = w-left-contents.outerWidth(true);
 
-    if(up >= down && up >= right && up >= left) direction = 0;
-    else if(right >= up && right >= left && right >= down) direction = 1;
-    else if(down >= up && down >= right && down >= left) direction = 2;
+    var contentsTop = contents.offset().top - $(window).scrollTop();
+    var contentsDown = h-contentsTop-contentsH;
+    var left = contents.offset().left;
+    var right = w-left-contentsW;
+
+    if(contentsTop >= contentsDown && contentsTop >= right && contentsTop >= left) direction = 0;
+    else if(right >= contentsTop && right >= left && right >= contentsDown) direction = 1;
+    else if(contentsDown >= contentsTop && contentsDown >= right && contentsDown >= left) direction = 2;
     else direction = 3;
 
     /* 上 */
@@ -101,41 +133,41 @@ function popupResize() {
         $(".popup").css({"left": left + "px"});
         $(".popup").css({"top": 20 + "px"});
         $(".popup").width(w-left-20);
-        $(".popup").height(up-contentsH+mU);
+        $(".popup").height(aH - sT - (aH - up - contentsH) - 20 - contentsH);
     }
     /* 右 */
     else if(direction == 1) {
-        if(up > down) {
+        if(up > contentsDown) {
             $(".popup").css({"left": left+contentsW-mR + "px"});
             $(".popup").css({"top": 20 + "px"});
             $(".popup").width(w-left-contentsW-30);
-            $(".popup").height(h-down-20);
+            $(".popup").height(aH - sT - (aH - up - contentsH));
         } else {
             $(".popup").css({"left": left+contentsW + "px"});
-            $(".popup").css({"top": up + "px"});
+            $(".popup").css({"top": contentsTop + "px"});
             $(".popup").width(w-left-contentsW-30);
-            $(".popup").height(h-up-20);
+            $(".popup").height(contentsDown-20);
         }
     }
     /* 下 */
     else if(direction == 2) {
         $(".popup").css({"left": left + "px"});
-        $(".popup").css({"top": up+contentsH-mU-mD + "px"});
+        $(".popup").css({"top": contentsTop+contentsH-mU-mD + "px"});
         $(".popup").width(right+contentsW-20);
-        $(".popup").height(down-20+mD+mU);
+        $(".popup").height(contentsDown-20-contentsH);
     }
     /* 左 */
     else {
-        if(up > down) {
+        if(up > contentsDown) {
             $(".popup").css({"left": 20 + "px"});
             $(".popup").css({"top": 20 + "px"});
             $(".popup").width(w-right-contentsW-30);
-            $(".popup").height(h-down-mD-20);
+            $(".popup").height(aH - sT - (aH - up - contentsH));
         } else {
             $(".popup").css({"left": 20 + "px"});
-            $(".popup").css({"top": up + "px"});
+            $(".popup").css({"top": contentsTop + "px"});
             $(".popup").width(w-right-contentsW-30);
-            $(".popup").height(h-up-20);
+            $(".popup").height(contentsDown-20);
         }
     }
 }
