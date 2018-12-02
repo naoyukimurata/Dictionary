@@ -8,6 +8,11 @@
     color: white;
 }
 
+#multipleTest {
+    width: 100px;
+    height: 100px;
+}
+
 /* template */
 .popup {
     z-index:1000;
@@ -36,4 +41,62 @@
 }
 .cell img {
     width: 180px;
+}
+
+/*
+  複数の意味を持つボタン用
+*/
+ul.multiple-list li {
+    z-index:910;
+}
+ul.multiple-list {
+    background: white;
+    z-index:900;
+    position:fixed;
+    border: 1px solid #EEEEEE;
+    padding: 10px;
+    display:inline-block;
+}
+ul.multiple-list li {
+    /* liが横並びになるようにします。 */
+    display: inline-block;
+    margin-left: 5px;
+}
+ul.multiple-list li .mu-cell {
+    width: 60px;
+    height: 60px;
+    /* チェックボックスの親要素にrelativeを指定しておきます。 */
+    position: relative;
+}
+.mu-cell img.mu-icon {
+    width: 100%;
+    height: 100%;
+    /* 画像にカーソルを合わせたときに、
+    カーソルが指のマークになるようにします。 */
+    cursor: pointer;
+}
+.mu-cell img.mu-icon.checked {
+    /* チェックが入った状態だと、枠が表示されるようにします。 */
+    border: 2px solid #666666;
+    /* 線をwidthとheightに含めるようにします。 */
+    box-sizing: border-box;
+}
+.mu-cell .disabled_checkbox {
+    /* チェックボックスの位置は絶対位置にします。 */
+    position: absolute;
+    /* チェックボックスは、親要素の右上から12pxの位置に配置します。 */
+    top: 2px;
+    right: 4px;
+    /* チェック前は非表示にしておきます。 */
+    display: none;
+    /* チェックボックスを大きくします。 */
+    transform: scale(1);
+    /* チェックボックスにカーソルを合わせたときに、
+    カーソルが指のマークになるようにします。 */
+    cursor: pointer;
+}
+.mu-cell img.mu-icon.checked + .disabled_checkbox {
+    /* 画像にcheckedクラスが指定されたときは、
+    チェックボックスの非表示を解除します。 */
+    display: block;
 }
